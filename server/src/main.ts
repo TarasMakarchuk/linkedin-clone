@@ -8,7 +8,6 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api');
   await app.listen(PORT);
-
   Logger.log(`Server start on host http://localhost:${PORT}/api`)
 }
 bootstrap();
