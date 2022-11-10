@@ -3,7 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { FeedModule } from './feed/feed.module';
+import { PostModule } from './feed/post.module';
 
 @Module({
   imports: [
@@ -18,7 +18,7 @@ import { FeedModule } from './feed/feed.module';
         autoLoadEntities: true,
         synchronize: true,
       }),
-      FeedModule,
+      PostModule,
   ],
   controllers: [AppController],
   providers: [AppService],
