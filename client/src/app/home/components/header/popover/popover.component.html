@@ -1,0 +1,53 @@
+<ion-card style="box-shadow: none">
+  <ion-card-header>
+
+    <ion-grid>
+      <ion-row class="ion-align-items-center ion-justify-content-center">
+        <ion-col size="auto">
+          <ion-avatar>
+            <ion-img src="../../../../../assets/my-profile-img.jpg"></ion-img>
+          </ion-avatar>
+        </ion-col>
+        <ion-col>
+          <ion-card-title>
+            User1
+          </ion-card-title>
+          <ion-card-subtitle>Full stack developer</ion-card-subtitle>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <ion-button
+      expand="block"
+      size="small"
+      fill="outline"
+      color="primary"
+    >
+      View profile
+    </ion-button>
+  </ion-card-header>
+
+  <ion-card-content>
+    <ion-card-subtitle style="font-weight: bold" color="dark">Account</ion-card-subtitle>
+    <p class="ion-padding-top">Settings & Privacy</p>
+    <p class="ion-padding-top">Help</p>
+    <p class="ion-padding-top">Language</p>
+  </ion-card-content>
+
+  <div class="item-divider"></div>
+
+  <ion-card-content>
+    <ion-card-subtitle style="font-weight: bold" color="dark">Manage</ion-card-subtitle>
+    <p class="ion-padding-top">Posts & Activities</p>
+    <p class="ion-padding-top">Job posting account</p>
+  </ion-card-content>
+
+  <div class="item-divider"></div>
+
+  <ion-card-content>
+    <p (click)="onSignOut()">Sign out</p>
+  </ion-card-content>
+
+  <div class="item-divider"></div>
+
+</ion-card>
