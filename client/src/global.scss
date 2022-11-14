@@ -25,10 +25,17 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
+* {
+  font-style: italic;
+};
+
 .my-custom-class .popover-content {
   width: 300px;
   margin-top: 16px;
-  font-style: italic;
   --box-shadow: none;
   --background: none;
-}
+};
+
+.item-divider {
+  border-bottom: 1px solid var(--ion-color-light-tint);
+};
