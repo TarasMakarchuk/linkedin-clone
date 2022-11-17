@@ -19,8 +19,11 @@ export class StartPostComponent implements OnInit {
       cssClass: 'custom-class-modal',
     });
     await modal.present();
-    const { role } = await modal.onDidDismiss();
-    console.log(7, role);
+    const { data, role } = await modal.onDidDismiss();
+    if (data) {
+      console.log(`data exists: `, data);
+    }
+    console.log(`role: `, role, `data: `, data);
   };
 
 }
