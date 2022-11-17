@@ -36,10 +36,26 @@
   --background: none;
 };
 
+.custom-class-modal {
+  --width: 552px;
+  --height: 400px;
+  margin-top: -400px;
+  ion-grid {
+    margin: 0 auto;
+    padding-bottom: 0;
+  }
+  ion-textarea {
+    --padding-top: 0;
+  }
+};
+
 .item-divider {
   border-bottom: 1px solid var(--ion-color-light-tint);
 };
 
 ion-button {
   text-transform: initial;
-}
+  ion-text {
+    margin-left: 8px;
+  }
+};
