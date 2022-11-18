@@ -1,9 +1,10 @@
-import {Body, Controller, Delete, Get, Param, Post, Put} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { PostService } from './post.service';
-import { Observable } from 'rxjs';
+import { Observable, ObservedValueOf } from 'rxjs';
 import { UpdateResult } from 'typeorm';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { PostEntity } from './entity/post.entity';
 
 @Controller('posts')
 export class PostController {
@@ -15,8 +16,12 @@ export class PostController {
     };
 
     @Get()
-    getAll(): Promise<Observable<CreatePostDto[]>> {
-        return this.feedPostService.getAll();
+    findSelected(
+        @Query('take') take: number = 10,
+        @Query('skip') skip: number = 0,
+    ): Promise<Observable<ObservedValueOf<Promise<[PostEntity[], number]>>>> {
+        take = take > 20 ? 20 : take;
+        return this.feedPostService.findSelected(take, skip);
     };
 
     @Put(':id')
