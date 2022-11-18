@@ -1,6 +1,6 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
 
-@Entity('feed_post')
+@Entity('post')
 export class PostEntity {
     @PrimaryGeneratedColumn()
     id: number
@@ -8,12 +8,9 @@ export class PostEntity {
     @Column({ default: '' })
     content: string;
 
-    @CreateDateColumn({ name: 'created_at', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @CreateDateColumn({ name: 'created_at' })
     createdAt: Date;
 
-    @UpdateDateColumn({
-        type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)",
-        onUpdate: "CURRENT_TIMESTAMP(6)"
-    })
+    @UpdateDateColumn({ name: 'updated_at' })
     updatedAt: Date;
 }
