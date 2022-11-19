@@ -1,7 +1,7 @@
 <div class="post-list-container">
   <ion-content>
     <ion-list>
-      <ion-card>
+      <ion-card *ngFor="let post of allLoadedPosts">
         <ion-grid>
           <ion-row class="ion-align-items-center ion-justify-content-center">
             <ion-col size="auto" class="ion-padding">
@@ -22,8 +22,7 @@
             </ion-col>
           </ion-row>
           <p class="post-body">
-            This is my first post. This is my first post. This is my first post.
-            This is my first post. This is my first post. This is my first post.
+            {{ post.content }}
           </p>
           <ion-row>
             <ion-button color="medium" fill="clear">
@@ -46,5 +45,12 @@
         </ion-grid>
       </ion-card>
     </ion-list>
+    <ion-infinite-scroll threshold="100px" (ionInfinite)="fetchData($event)">
+      <ion-infinite-scroll-content
+        loadingSpinner="bubbles"
+        loadingText="Loading more data..."
+      ></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
   </ion-content>
+  <div class="hide-scroll"></div>
 </div>
