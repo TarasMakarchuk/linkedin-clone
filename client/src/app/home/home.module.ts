@@ -10,6 +10,7 @@ import { ProfileSummaryComponent } from './components/profile-summary/profile-su
 import { AdvertisingComponent } from './components/advertising/advertising.component';
 import { StartPostComponent } from './components/start-post/start-post.component';
 import { ModalComponent } from './components/start-post/modal/modal.component';
+import { PostsListComponent } from './components/posts-list/posts-list.component';
 
 @NgModule({
   imports: [
@@ -25,6 +26,7 @@ import { ModalComponent } from './components/start-post/modal/modal.component';
     AdvertisingComponent,
     StartPostComponent,
     ModalComponent,
+    PostsListComponent,
   ]
 })
 export class HomePageModule {}
