@@ -19,7 +19,7 @@ export class PostController {
     findSelected(
         @Query('take') take: number = 10,
         @Query('skip') skip: number = 0,
-    ): Promise<Observable<ObservedValueOf<Promise<[PostEntity[], number]>>>> {
+    ): Promise<Observable<ObservedValueOf<Promise<PostEntity[]>>>> {
         take = take > 20 ? 20 : take;
         return this.feedPostService.findSelected(take, skip);
     };

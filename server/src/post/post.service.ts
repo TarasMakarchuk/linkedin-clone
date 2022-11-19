@@ -17,8 +17,8 @@ export class PostService {
         return from(this.postRepository.save(dto));
     };
 
-    async findSelected(take: number, skip: number): Promise<Observable<ObservedValueOf<Promise<[PostEntity[], number]>>>> {
-        return from(this.postRepository.findAndCount({ take, skip }));
+    async findSelected(take: number, skip: number): Promise<Observable<ObservedValueOf<Promise<PostEntity[]>>>> {
+        return from(this.postRepository.find({ take, skip }));
     };
 
     async update(id: number, dto: UpdatePostDto): Promise<Observable<UpdateResult>> {
