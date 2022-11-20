@@ -11,6 +11,7 @@ import { AdvertisingComponent } from './components/advertising/advertising.compo
 import { StartPostComponent } from './components/start-post/start-post.component';
 import { ModalComponent } from './components/start-post/modal/modal.component';
 import { PostsListComponent } from './components/posts-list/posts-list.component';
+import { TabsComponent } from './components/tabs/tabs.component';
 
 @NgModule({
   imports: [
@@ -27,6 +28,7 @@ import { PostsListComponent } from './components/posts-list/posts-list.component
     StartPostComponent,
     ModalComponent,
     PostsListComponent,
+    TabsComponent,
   ]
 })
 export class HomePageModule {}
