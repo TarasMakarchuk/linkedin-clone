@@ -1,5 +1,8 @@
 :host {
-  justify-content: start;
+  display: flex;
+  justify-content: flex-start;
+  min-height: 100vh;
+  flex-direction: column;
 };
 
 .content-container {
@@ -20,4 +23,8 @@ app-post-list, .post-divider {
 .post-divider {
   padding-top: 8px;
   margin: 0 12px;
+};
+
+app-tabs {
+  margin-top: auto;
 };
