@@ -6,6 +6,11 @@
   display: flex;
   width: 1128px;
   margin: 40px auto 0;
+  @media(max-width: 1200px) {
+    width: auto;
+    justify-content: center;
+    margin-top: 0;
+  }
 };
 
 app-post-list, .post-divider {
