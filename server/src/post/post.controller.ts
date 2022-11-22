@@ -8,11 +8,11 @@ import { PostEntity } from './entity/post.entity';
 
 @Controller('posts')
 export class PostController {
-    constructor(private  feedPostService: PostService) {}
+    constructor(private postService: PostService) {}
 
     @Post()
     create(@Body() dto: CreatePostDto): Promise<Observable<CreatePostDto>> {
-        return this.feedPostService.create(dto);
+        return this.postService.create(dto);
     };
 
     @Get()
@@ -21,7 +21,7 @@ export class PostController {
         @Query('skip') skip: number = 0,
     ): Promise<Observable<ObservedValueOf<Promise<PostEntity[]>>>> {
         take = take > 20 ? 20 : take;
-        return this.feedPostService.findSelected(take, skip);
+        return this.postService.findSelected(take, skip);
     };
 
     @Put(':id')
@@ -29,11 +29,11 @@ export class PostController {
         @Param('id') id: number,
         @Body() dto: UpdatePostDto
     ): Promise<Observable<UpdateResult>>  {
-        return this.feedPostService.update(id, dto);
+        return this.postService.update(id, dto);
     };
 
     @Delete(':id')
     delete(@Param('id') id: number) {
-        return this.feedPostService.delete(id);
+        return this.postService.delete(id);
     };
 }
