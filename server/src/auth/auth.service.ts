@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { from, map, Observable, switchMap } from 'rxjs';
-import { IUser } from './entity/user.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entity/user.entity';
 import { Repository } from 'typeorm';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -18,10 +18,9 @@ export class AuthService {
         return from(bcrypt.hash(password, SALT));
     };
 
-    registration(dto: IUser): Observable<IUser> {
+   async registration(dto: CreateUserDto): Promise<Observable<UserEntity>> {
         const { firstName, lastName, email, password } = dto;
-
-        const found = this.userRepository.findOne({ where: { email }}).then(data => data);
+        const found = await this.userRepository.findOne({ where: { email }});
         if (found) throw new BadRequestException(`This email is already in use`);
 
         return this.hashPassword(password).pipe(
@@ -32,7 +31,7 @@ export class AuthService {
                     email,
                     password: hashedPassword,
                 })).pipe(
-                    map((user: IUser) => {
+                    map((user: UserEntity) => {
                         delete user.password;
                         return user;
                     })
