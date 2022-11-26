@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreatePostDto } from './dto/create-post.dto';
 import { from, Observable, ObservedValueOf } from 'rxjs';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { UserEntity } from '../auth/entity/user.entity';
 
 @Injectable()
 export class PostService {
@@ -13,7 +14,8 @@ export class PostService {
         private readonly postRepository: Repository<PostEntity>
     ) {}
 
-    async create(dto: CreatePostDto): Promise<Observable<CreatePostDto>> {
+    async create(user: UserEntity, dto: CreatePostDto): Promise<Observable<CreatePostDto>> {
+        dto.author = user;
         return from(this.postRepository.save(dto));
     };
 
