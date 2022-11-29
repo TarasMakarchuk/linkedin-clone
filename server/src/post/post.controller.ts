@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, Request, UseGuards } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { PostService } from './post.service';
-import { Observable, ObservedValueOf } from 'rxjs';
+import { Observable } from 'rxjs';
 import { UpdateResult } from 'typeorm';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostEntity } from './entity/post.entity';
@@ -17,7 +17,7 @@ export class PostController {
     @Roles(Role.ADMIN, Role.PREMIUM)
     @UseGuards(JwtGuard, RolesGuard)
     @Post()
-    create(@Body() dto: CreatePostDto, @Request() req): Promise<Observable<CreatePostDto>> {
+    create(@Body() dto: CreatePostDto, @Request() req): Observable<CreatePostDto> {
         return this.postService.create(req.user, dto);
     };
 
@@ -25,7 +25,7 @@ export class PostController {
     findSelected(
         @Query('take') take: number = 10,
         @Query('skip') skip: number = 0,
-    ): Promise<Observable<ObservedValueOf<Promise<PostEntity[]>>>> {
+    ): Observable<PostEntity[]> {
         take = take > 20 ? 20 : take;
         return this.postService.findSelected(take, skip);
     };
@@ -34,7 +34,7 @@ export class PostController {
     update(
         @Param('id') id: number,
         @Body() dto: UpdatePostDto
-    ): Promise<Observable<UpdateResult>>  {
+    ): Observable<UpdateResult>  {
         return this.postService.update(id, dto);
     };
 
