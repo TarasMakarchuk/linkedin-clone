@@ -24,7 +24,7 @@ export class PostService {
     };
 
     update(id: number, dto: UpdatePostDto): Observable<UpdateResult> {
-        return from(this.postRepository.update( id, dto));
+        return from(this.postRepository.update(id, dto));
     };
 
     delete(id: number): Observable<DeleteResult> {
