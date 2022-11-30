@@ -12,6 +12,7 @@ import { StartPostComponent } from './components/start-post/start-post.component
 import { ModalComponent } from './components/start-post/modal/modal.component';
 import { PostsListComponent } from './components/posts-list/posts-list.component';
 import { TabsComponent } from './components/tabs/tabs.component';
+import { PopoverComponent } from './components/header/popover/popover.component';
 
 @NgModule({
   imports: [
@@ -29,6 +30,7 @@ import { TabsComponent } from './components/tabs/tabs.component';
     ModalComponent,
     PostsListComponent,
     TabsComponent,
+    PopoverComponent,
   ]
 })
 export class HomePageModule {}
