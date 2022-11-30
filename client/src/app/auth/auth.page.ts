@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { NewUser } from './models/new-user.model';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-auth',
@@ -9,20 +11,26 @@ import { NgForm } from '@angular/forms';
 export class AuthPage implements OnInit {
   @ViewChild('form') form: NgForm;
   submissionType: 'login' | 'join' = 'login';
-  constructor() { }
 
-  ngOnInit() {
-  }
+  constructor(private authService: AuthService) {}
+
+  ngOnInit() {}
 
   onSubmit() {
-    const { email, password, firstName, lastName } = this.form.value;
+    const { email, password } = this.form.value;
     if (!email || !password) return;
     if (this.submissionType === 'login') {
       console.log({email, password});
     }
     if (this.submissionType === 'join') {
+      const { firstName, lastName } = this.form.value;
       if (!firstName || !lastName) return;
-      console.log({firstName, lastName, email, password});
+
+      const user: NewUser = { firstName, lastName, email, password };
+
+      return this.authService.register(user).subscribe(() => {
+        this.toggleText();
+      });
     }
   };
 
