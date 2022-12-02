@@ -2,9 +2,9 @@ export type Role = 'user' | 'admin' | 'premium';
 export type Post = {
   id: number;
   content: string;
+  author: User;
   created_at: Date;
   updated_at: Date;
-  author: User;
 }
 
 export interface User {
@@ -14,7 +14,7 @@ export interface User {
   email: string;
   password: string;
   role: Role;
-  posts: [];
+  posts: Post[];
   createdAt: Date;
   updatedAt: Date;
 }

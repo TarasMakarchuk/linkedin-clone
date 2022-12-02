@@ -11,7 +11,7 @@ export class PopoverComponent implements OnInit {
 
   ngOnInit() {}
 
-  async onSignOut() {
+  async onSignOut(): Promise<void> {
     await this.authService.logout();
   }
 }

@@ -12,10 +12,10 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit() {}
 
-  async presentPopover(event: any) {
+  async presentPopover(event: any): Promise<void> {
     const popover = await this.popoverController.create({
       component: PopoverComponent,
-      cssClass: "my-custom-class",
+      cssClass: 'my-custom-class',
       event,
       showBackdrop: false,
     });
