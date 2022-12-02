@@ -5,10 +5,11 @@ import { Observable } from 'rxjs';
 import { UpdateResult } from 'typeorm';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostEntity } from './entity/post.entity';
-import { JwtGuard } from '../auth/guards/jwt/jwt.guard';
+import { JwtGuard } from '../auth/guards/jwt.guard';
 import { Roles } from '../auth/decorators/roles/roles.decorator';
 import { Role } from '../auth/entity/role.enum';
-import { RolesGuard } from '../auth/guards/roles/roles.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { IsCreatorGuard } from './guards/is-creator.guard';
 
 @Controller('posts')
 export class PostController {
@@ -30,6 +31,7 @@ export class PostController {
         return this.postService.findSelected(take, skip);
     };
 
+    @UseGuards(JwtGuard, IsCreatorGuard)
     @Put(':id')
     update(
         @Param('id') id: number,
@@ -38,6 +40,7 @@ export class PostController {
         return this.postService.update(id, dto);
     };
 
+    @UseGuards(JwtGuard, IsCreatorGuard)
     @Delete(':id')
     delete(@Param('id') id: number) {
         return this.postService.delete(id);
