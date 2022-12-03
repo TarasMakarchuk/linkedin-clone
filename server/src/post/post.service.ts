@@ -30,4 +30,11 @@ export class PostService {
     delete(id: number): Observable<DeleteResult> {
         return from(this.postRepository.delete(id));
     };
+
+    findById(id: number): Observable<PostEntity> {
+        return from(this.postRepository.findOne({
+            where: { id },
+            relations: ['author'],
+        }));
+    };
 }
