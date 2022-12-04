@@ -22,13 +22,14 @@ export class PostController {
         return this.postService.create(req.user, dto);
     };
 
+    @UseGuards(JwtGuard)
     @Get()
-    findSelected(
+    findPosts(
         @Query('take') take: number = 10,
         @Query('skip') skip: number = 0,
     ): Observable<PostEntity[]> {
         take = take > 20 ? 20 : take;
-        return this.postService.findSelected(take, skip);
+        return this.postService.findPosts(take, skip);
     };
 
     @UseGuards(JwtGuard, IsCreatorGuard)

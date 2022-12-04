@@ -19,8 +19,16 @@ export class PostService {
         return from(this.postRepository.save(dto));
     };
 
-    findSelected(take: number, skip: number): Observable<PostEntity[]> {
-        return from(this.postRepository.find({ take, skip }));
+    findPosts(take: number, skip: number): Observable<PostEntity[]> {
+        return from(
+            this.postRepository
+                .createQueryBuilder('post')
+                .innerJoinAndSelect('post.author', 'author')
+                .orderBy('post.createdAt', 'DESC')
+                .take(take)
+                .skip(skip)
+                .getMany(),
+        )
     };
 
     update(id: number, dto: UpdatePostDto): Observable<UpdateResult> {
