@@ -1,11 +1,6 @@
+import { Post } from '../../home/models/Post';
+
 export type Role = 'user' | 'admin' | 'premium';
-export type Post = {
-  id: number;
-  content: string;
-  author: User;
-  created_at: Date;
-  updated_at: Date;
-}
 
 export interface User {
   id: number;
