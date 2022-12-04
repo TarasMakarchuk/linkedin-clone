@@ -28,7 +28,7 @@ export class PostsListComponent implements OnInit {
     }
     this.queryParams = `?take=${this.numberOfPosts}&skip=${this.skipPosts}`;
 
-    this.postService.getSelectedPosts(this.queryParams).subscribe((posts: Post[]) => {
+    this.postService.getPosts(this.queryParams).subscribe((posts: Post[]) => {
       posts.forEach((post, index) => {
         this.allLoadedPosts.push(posts[index]);
       });
