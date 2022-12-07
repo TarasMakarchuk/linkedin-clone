@@ -24,7 +24,6 @@ export class ModalComponent implements OnInit {
     this.modalController.dismiss({
         post: {
           body,
-          createdAt: new Date(),
         }
       },
       'post',
