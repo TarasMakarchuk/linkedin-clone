@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { take } from 'rxjs/operators';
 import { Role } from '../../../auth/models/user.model';
-import { AuthService } from 'src/app/auth/services/auth.service';
+import { AuthService } from '../../../auth/services/auth.service';
 
 type BannerColors = {
   colorOne: string;
@@ -23,7 +23,7 @@ export class ProfileSummaryComponent implements OnInit {
   constructor(private authService: AuthService) {}
 
   ngOnInit() {
-    this.authService.getUserRole.pipe(take(1)).subscribe((role: Role) => {
+    this.authService.userRole.pipe(take(1)).subscribe((role: Role) => {
       this.bannerColors = this.getBannerColors(role);
     });
   };
