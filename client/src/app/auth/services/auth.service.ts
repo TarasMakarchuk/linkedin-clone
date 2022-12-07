@@ -29,10 +29,18 @@ export class AuthService {
     );
   };
 
-  get getUserRole(): Observable<Role>{
+  get userRole(): Observable<Role>{
     return this.user$.asObservable().pipe(
       switchMap((user: User) => {
         return of(user.role);
+      })
+    );
+  };
+
+  get userId(): Observable<number>{
+    return this.user$.asObservable().pipe(
+      switchMap((user: User) => {
+        return of(user.id);
       })
     );
   };
