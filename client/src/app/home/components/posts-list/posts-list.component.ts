@@ -1,11 +1,12 @@
 import { Component, Input, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { IonInfiniteScroll } from '@ionic/angular';
+import { IonInfiniteScroll, ModalController } from '@ionic/angular';
 import { BehaviorSubject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { AuthService } from '../../../auth/services/auth.service';
 import { NUMBER_OF_POSTS, SKIP_POSTS } from '../../constants/infinite-scroll.constants';
 import { Post } from '../../models/Post';
 import { PostService } from '../../services/post.service';
+import { ModalComponent } from '../start-post/modal/modal.component';
 
 @Component({
   selector: 'app-posts-list',
@@ -16,6 +17,7 @@ export class PostsListComponent implements OnInit {
   constructor(
     private postService: PostService,
     private authService: AuthService,
+    public modalController: ModalController,
   ) {}
 
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
@@ -63,8 +65,24 @@ export class PostsListComponent implements OnInit {
     this.getPosts(true, event);
   };
 
-  presentUpdateModal(postId: number) {
-    console.log('EDIT POST', postId);
+  async presentUpdateModal(postId: number) {
+    const modal = await this.modalController.create({
+      component: ModalComponent,
+      cssClass: 'custom-class-modal',
+      componentProps: {
+        postId,
+      },
+    });
+    await modal.present();
+
+    const { data } = await modal.onDidDismiss();
+    if (!data) return;
+    const updatedPost = data.post.body;
+    this.postService.update(postId, updatedPost).subscribe(() => {
+      const postIndex = this.allLoadedPosts.findIndex(
+        (post: Post) => post.id === postId);
+      this.allLoadedPosts[postIndex].content = updatedPost;
+    });
   };
 
   deletePost(postId: number) {
