@@ -24,7 +24,7 @@ export class PostService {
       .post<Post>(
       `${environment.baseApiUrl}/posts`,
       { content },
-      this.httpOptions
+      this.httpOptions,
     ).pipe(take(1));
   };
 
