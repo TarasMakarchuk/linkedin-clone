@@ -65,12 +65,13 @@ export class PostsListComponent implements OnInit {
     this.getPosts(true, event);
   };
 
-  async presentUpdateModal(postId: number) {
+  async presentUpdateModal(postId: number, content: string) {
     const modal = await this.modalController.create({
       component: ModalComponent,
       cssClass: 'custom-class-modal',
       componentProps: {
         postId,
+        content,
       },
     });
     await modal.present();
