@@ -13,6 +13,7 @@ export class ModalComponent implements OnInit {
 
   @ViewChild('form') form: NgForm;
   @Input() postId?: number;
+  @Input() content?: string;
 
   ngOnInit() {}
 
