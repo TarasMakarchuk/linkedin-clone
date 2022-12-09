@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { map, Observable } from 'rxjs';
-import { AuthService } from './auth.service';
+import { AuthService } from './services/auth.service';
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UserEntity } from "./entity/user.entity";
 import { LoginUserDto } from "./dto/login-user.dto";

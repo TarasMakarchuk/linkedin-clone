@@ -2,10 +2,10 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { from, map, Observable, switchMap } from 'rxjs';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from './entity/user.entity';
+import { UserEntity } from '../entity/user.entity';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from './dto/create-user.dto';
-import { LoginUserDto } from './dto/login-user.dto';
+import { CreateUserDto } from '../dto/create-user.dto';
+import { LoginUserDto } from '../dto/login-user.dto';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()

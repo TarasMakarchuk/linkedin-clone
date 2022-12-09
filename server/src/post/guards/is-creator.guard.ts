@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { map, Observable, switchMap } from 'rxjs';
 import { UserEntity } from 'src/auth/entity/user.entity';
-import { AuthService } from '../../auth/auth.service';
+import { AuthService } from '../../auth/services/auth.service';
 import { PostService } from '../post.service';
 import { Role } from '../../auth/entity/role.enum';
 import { PostEntity } from '../entity/post.entity';
