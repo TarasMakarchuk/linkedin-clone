@@ -42,11 +42,28 @@ export class UserController {
 
     @UseGuards(JwtGuard)
     @Get('image')
-    getImage(@Request() req, @Res() res): Observable<Object> {
+    getImage(
+        @Request() req,
+        @Res() res
+    ): Observable<Object> {
         const userId = req.user.id;
         return this.userService.findAvatarByUserId(userId).pipe(
             switchMap((imageName: string) => {
                 return of(res.sendFile(imageName, { root: imagesFolderPath }))
+            })
+        );
+    };
+
+    @UseGuards(JwtGuard)
+    @Get('image-name')
+    getImageName(
+        @Request() req,
+        @Res() res
+    ): Observable<{ imageName: string }> {
+        const { id } = req.user;
+        return this.userService.findAvatarByUserId(id).pipe(
+            switchMap((imageName: string) => {
+                return of({ imageName });
             })
         );
     };
