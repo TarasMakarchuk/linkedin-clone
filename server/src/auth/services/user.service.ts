@@ -32,7 +32,7 @@ export class UserService {
         return from(this.userRepository.update(id, user));
     };
 
-    findAvatarNameByUserId(id: number): Observable<string> {
+    findAvatarByUserId(id: number): Observable<string> {
         return from(this.userRepository.findOne({
             where: { id },
         })).pipe(

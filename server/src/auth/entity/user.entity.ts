@@ -16,11 +16,14 @@ export class UserEntity {
     @Column({ unique: true })
     email: string;
 
-    @Column({ type: 'enum', enum: Role, default: Role.USER })
-    role: Role;
-
     @Column({ select: false })
     password: string;
+
+    @Column({ nullable: true })
+    avatar: string;
+
+    @Column({ type: 'enum', enum: Role, default: Role.USER })
+    role: Role;
 
     @CreateDateColumn({ name: 'created_at' })
     createdAt: Date;

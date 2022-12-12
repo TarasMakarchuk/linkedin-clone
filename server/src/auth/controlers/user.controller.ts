@@ -1,4 +1,4 @@
-import { Controller, Post, Request, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Post, Request, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserService } from '../services/user.service';
 import { JwtGuard } from '../guards/jwt.guard';
@@ -39,4 +39,16 @@ export class UserController {
             })
         );
     };
+
+    @UseGuards(JwtGuard)
+    @Get('image')
+    getImage(@Request() req, @Res() res): Observable<Object> {
+        const userId = req.user.id;
+        return this.userService.findAvatarByUserId(userId).pipe(
+            switchMap((imageName: string) => {
+                return of(res.sendFile(imageName, { root: imagesFolderPath }))
+            })
+        );
+    };
+
 }
