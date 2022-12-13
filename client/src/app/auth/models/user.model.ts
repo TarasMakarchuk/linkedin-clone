@@ -9,7 +9,8 @@ export interface User {
   email: string;
   password: string;
   role: Role;
-  posts: Post[];
+  imagePath?: string;
+  posts?: Post[];
   createdAt: Date;
   updatedAt: Date;
 }
