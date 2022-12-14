@@ -1,7 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { take } from 'rxjs/operators';
+import { FormControl, FormGroup } from '@angular/forms';
+import { from, of } from 'rxjs';
+import { switchMap, take } from 'rxjs/operators';
 import { Role } from '../../../auth/models/user.model';
 import { AuthService } from '../../../auth/services/auth.service';
+import { FileTypeResult, fromBuffer } from 'file-type';
+
+type validFileExtension = 'png' | 'jpg' | 'jpeg' | 'gif';
+type validMimeType = 'image/png' | 'image/jpg' | 'image/jpeg' | 'image/gif';
 
 type BannerColors = {
   colorOne: string;
@@ -15,6 +21,16 @@ type BannerColors = {
   styleUrls: ['./profile-summary.component.scss'],
 })
 export class ProfileSummaryComponent implements OnInit {
+  form: FormGroup;
+
+  validFileExtensions: validFileExtension[] = ['png', 'jpg', 'jpeg', 'gif'];
+  validMimeTypes: validMimeType[] = [
+    'image/png',
+    'image/jpg',
+    'image/jpeg',
+    'image/gif',
+  ];
+
   bannerColors: BannerColors = {
     colorOne: '#a0b4b7',
     colorTwo: '#dbe7e9',
@@ -23,12 +39,16 @@ export class ProfileSummaryComponent implements OnInit {
   constructor(private authService: AuthService) {}
 
   ngOnInit() {
+    this.form = new FormGroup({
+      file: new FormControl(null),
+    });
+
     this.authService.userRole.pipe(take(1)).subscribe((role: Role) => {
       this.bannerColors = this.getBannerColors(role);
     });
   };
 
-  private  getBannerColors(role: Role): BannerColors {
+  private getBannerColors(role: Role): BannerColors {
     switch (role) {
       case 'admin':
         return {
@@ -46,4 +66,40 @@ export class ProfileSummaryComponent implements OnInit {
         return this.bannerColors;
     }
   };
+
+  onFileSelect(event: Event): void {
+    const file: File = (event.target as HTMLInputElement).files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    from(file.arrayBuffer())
+      .pipe(
+        switchMap((buffer: Buffer) => {
+          return from(fromBuffer(buffer)).pipe(
+            switchMap((fileTypeResult: FileTypeResult) => {
+              if (!fileTypeResult) {
+                //TODO: error handling
+                console.log({ error: 'File format not supported' });
+                return of();
+              }
+              const { ext, mime } = fileTypeResult;
+              const isFileTypeLegit = this.validFileExtensions.includes(ext as any);
+              const isMimeTypeLegit = this.validMimeTypes.includes(mime as any);
+              const isFileLegit = isFileTypeLegit && isMimeTypeLegit;
+              if (!isFileLegit) {
+                //TODO: error handling
+                console.log({ error: 'File format doesn\'t match file extension' });
+                return of();
+              }
+
+              return this.authService.uploadUserImage(formData);
+            })
+          )
+        })
+      ).subscribe()
+    this.form.reset();
+  };
+
 }
