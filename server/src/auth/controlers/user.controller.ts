@@ -2,7 +2,7 @@ import { Controller, Get, Post, Request, Res, UploadedFile, UseGuards, UseInterc
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserService } from '../services/user.service';
 import { JwtGuard } from '../guards/jwt.guard';
-import { Observable, of, switchMap } from 'rxjs';
+import { map, Observable, of, switchMap } from 'rxjs';
 import {
     imagesFolderPath,
     isFileExtensionSafe,
@@ -11,7 +11,6 @@ import {
     validFileExtensions
 } from '../helpers/image-storage';
 import { join } from 'path';
-import { UpdateResult } from "typeorm";
 
 @Controller('user')
 export class UserController {
@@ -23,7 +22,7 @@ export class UserController {
     uploadAvatar(
         @UploadedFile() file: Express.Multer.File,
         @Request() req,
-    ):  Observable<UpdateResult | { error: string }> {
+    ):  Observable<{ modifiedFileName: string } | { error: string }> {
         const fileName = file?.filename;
         if (!fileName) return of({ error: `File extension should be ${[...validFileExtensions].join(', ')}` });
         const imagePath = join(`${imagesFolderPath}/${fileName}`);
@@ -32,7 +31,11 @@ export class UserController {
             switchMap((isFileLegit: boolean) => {
                 if (isFileLegit) {
                     const userId = req.user.id;
-                    return this.userService.updateAvatarById(userId, fileName);
+                    return this.userService.updateAvatarById(userId, fileName).pipe(
+                        map(() => ({
+                            modifiedFileName: file.filename
+                        })),
+                    );
                 }
                 removeFile(imagePath);
                 return of({ error: `File content does not match extension`});
@@ -56,10 +59,7 @@ export class UserController {
 
     @UseGuards(JwtGuard)
     @Get('image-name')
-    getImageName(
-        @Request() req,
-        @Res() res
-    ): Observable<{ imageName: string }> {
+    getImageName(@Request() req): Observable<{ imageName: string }> {
         const { id } = req.user;
         return this.userService.findAvatarByUserId(id).pipe(
             switchMap((imageName: string) => {
