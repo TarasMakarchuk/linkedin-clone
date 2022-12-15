@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { from, of } from 'rxjs';
+import { BehaviorSubject, from, of, Subscription } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { Role } from '../../../auth/models/user.model';
 import { AuthService } from '../../../auth/services/auth.service';
@@ -20,16 +20,17 @@ type BannerColors = {
   templateUrl: './profile-summary.component.html',
   styleUrls: ['./profile-summary.component.scss'],
 })
-export class ProfileSummaryComponent implements OnInit {
+export class ProfileSummaryComponent implements OnInit, OnDestroy {
   form: FormGroup;
 
   validFileExtensions: validFileExtension[] = ['png', 'jpg', 'jpeg', 'gif'];
-  validMimeTypes: validMimeType[] = [
-    'image/png',
-    'image/jpg',
-    'image/jpeg',
-    'image/gif',
-  ];
+  validMimeTypes: validMimeType[] = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif'];
+
+  userImagePath: string;
+  private userSubscription: Subscription;
+
+  fullName$ = new BehaviorSubject<string>(null);
+  fullName = '';
 
   bannerColors: BannerColors = {
     colorOne: '#a0b4b7',
@@ -45,6 +46,18 @@ export class ProfileSummaryComponent implements OnInit {
 
     this.authService.userRole.pipe(take(1)).subscribe((role: Role) => {
       this.bannerColors = this.getBannerColors(role);
+    });
+
+    this.authService.userFullName
+      .pipe(take(1))
+      .subscribe((fullName: string) => {
+        this.fullName = fullName;
+        this.fullName$.next(fullName);
+      });
+
+    this.userSubscription = this.authService.userImagePath.subscribe(
+      (imagePath: string) => {
+        this.userImagePath = imagePath;
     });
   };
 
@@ -100,6 +113,10 @@ export class ProfileSummaryComponent implements OnInit {
         })
       ).subscribe()
     this.form.reset();
+  };
+
+  ngOnDestroy(): void {
+    this.userSubscription.unsubscribe();
   };
 
 }

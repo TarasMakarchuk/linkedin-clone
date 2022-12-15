@@ -2,13 +2,24 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Post } from '../models/Post';
 import { environment } from '../../../environments/environment';
-import { take } from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators';
+import { AuthService } from '../../auth/services/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PostService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private authService: AuthService) {
+    this.authService
+      .getUserImageName()
+      .pipe(
+        take(1),
+        tap(({imageName}) => {
+          const defaultImagePath = 'default-avatar.png';
+          this.authService.updateUserImagePath(imageName || defaultImagePath).subscribe();
+        }),
+      ).subscribe();
+  }
 
   private httpOptions: { headers: HttpHeaders } = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json'}),

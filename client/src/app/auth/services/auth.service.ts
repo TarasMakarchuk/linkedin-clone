@@ -74,11 +74,11 @@ export class AuthService {
   };
 
   getDefaultUserImagePath(): string {
-    return `${environment.baseApiUrl}/post/image/default-avatar.png`;
+    return `${environment.baseApiUrl}/posts/image/default-avatar.png`;
   };
 
   getUserImagePath(imageName: string): string {
-    return `${environment.baseApiUrl}/post/image/${imageName}`;
+    return `${environment.baseApiUrl}/posts/image/${imageName}`;
   };
 
   getUserImage() {
@@ -129,7 +129,6 @@ export class AuthService {
   };
 
   login(email: string, password: string): Observable<{ token: string }> {
-    console.log(email, password);
     return this.http.post<{ token: string }>(
       `${environment.baseApiUrl}/auth/login`,
       { email, password },
