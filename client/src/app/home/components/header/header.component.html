@@ -59,7 +59,7 @@
             size="auto"
           >
            <ion-avatar>
-             <ion-img src="../../../../assets/my-profile-img.jpg"></ion-img>
+             <ion-img *ngIf="userImagePath" [src]="userImagePath"></ion-img>
            </ion-avatar>
             <div
               style="display: flex;
