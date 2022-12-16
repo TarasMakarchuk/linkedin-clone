@@ -38,7 +38,7 @@ export class UserController {
                     );
                 }
                 removeFile(imagePath);
-                return of({ error: `File content does not match extension`});
+                return of({ error: `File content does not match extension` });
             })
         );
     };

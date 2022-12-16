@@ -16,7 +16,7 @@
     <ion-row class="ion-justify-content-start">
       <ion-col size="auto">
         <ion-avatar>
-          <ion-img src="../../../../../assets/my-profile-img.jpg"></ion-img>
+          <ion-img *ngIf="userImagePath" [src]="userImagePath"></ion-img>
         </ion-avatar>
       </ion-col>
       <ion-col>
