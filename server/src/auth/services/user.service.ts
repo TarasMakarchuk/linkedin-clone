@@ -27,7 +27,7 @@ export class UserService {
     updateAvatarById(id: number, imagePath: string): Observable<UpdateResult> {
         const user: UserEntity = new UserEntity();
         user.id = id;
-        user.avatar = imagePath;
+        user.imagePath = imagePath;
 
         return from(this.userRepository.update(id, user));
     };
@@ -38,7 +38,7 @@ export class UserService {
         })).pipe(
             map((user: UserEntity) => {
                 delete user.password;
-                return user.avatar;
+                return user.imagePath;
             })
         );
     };

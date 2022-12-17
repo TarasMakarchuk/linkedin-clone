@@ -25,7 +25,6 @@ export class StartPostComponent implements OnInit, OnDestroy {
   };
 
   async presentModal() {
-    console.log('CREATE POST');
     const modal = await this.modalController.create({
       component: ModalComponent,
       cssClass: 'custom-class-modal',

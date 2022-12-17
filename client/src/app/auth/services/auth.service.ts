@@ -64,20 +64,20 @@ export class AuthService {
     return this.user$.asObservable().pipe(
       switchMap((user: User) => {
         const doesUserHaveImage = !!user?.imagePath;
-        let fullImagePath = this.getDefaultUserImagePath();
+        let fullImagePath = this.getDefaultImagePath();
         if (doesUserHaveImage) {
-          fullImagePath = this.getUserImagePath(user.imagePath);
+          fullImagePath = this.getImagePath(user.imagePath);
         }
         return of(fullImagePath);
       })
     );
   };
 
-  getDefaultUserImagePath(): string {
+  getDefaultImagePath(): string {
     return `${environment.baseApiUrl}/posts/image/default-avatar.png`;
   };
 
-  getUserImagePath(imageName: string): string {
+  getImagePath(imageName: string): string {
     return `${environment.baseApiUrl}/posts/image/${imageName}`;
   };
 
