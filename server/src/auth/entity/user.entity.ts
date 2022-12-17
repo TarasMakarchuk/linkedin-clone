@@ -20,7 +20,7 @@ export class UserEntity {
     password: string;
 
     @Column({ nullable: true })
-    avatar: string;
+    imagePath: string;
 
     @Column({ type: 'enum', enum: Role, default: Role.USER })
     role: Role;

@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/auth/services/auth.service';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-popover',
@@ -13,10 +14,20 @@ export class PopoverComponent implements OnInit, OnDestroy {
   userImagePath: string;
   private userImagePathSubscription: Subscription;
 
+  fullName$ = new BehaviorSubject<string>(null);
+  fullName = '';
+
   ngOnInit() {
     this.userImagePathSubscription = this.authService.userImagePath.subscribe(
       (imagePath: string) => {
         this.userImagePath = imagePath;
+      });
+
+    this.authService.userFullName
+      .pipe(take(1))
+      .subscribe((fullName: string) => {
+        this.fullName = fullName;
+        this.fullName$.next(fullName);
       });
   };
 
