@@ -1,6 +1,7 @@
 import { PostEntity } from '../../post/entity/post.entity';
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Role } from './role.enum';
+import { FriendRequestEntity } from './friend-request.entity';
 
 @Entity('user')
 export class UserEntity {
@@ -33,4 +34,16 @@ export class UserEntity {
 
     @OneToMany(() => PostEntity, (postEntity) => postEntity.author)
     posts: PostEntity[];
+
+    @OneToMany(
+        () => FriendRequestEntity,
+        (friendRequest) => friendRequest.creator,
+    )
+    sentFriendRequests: FriendRequestEntity[];
+
+    @OneToMany(
+        () => FriendRequestEntity,
+        (friendRequest) => friendRequest.receiver,
+    )
+    receivedFriendRequests: FriendRequestEntity[];
 }

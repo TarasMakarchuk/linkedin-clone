@@ -9,15 +9,16 @@ import { JwtStrategy } from './guards/jwt.strategy';
 import { RolesGuard } from './guards/roles.guard';
 import { UserService } from './services/user.service';
 import { UserController } from './controlers/user.controller';
+import { FriendRequestEntity } from './entity/friend-request.entity';
 
 @Module({
   imports: [
-      TypeOrmModule.forFeature([UserEntity]),
+      TypeOrmModule.forFeature([UserEntity, FriendRequestEntity]),
       JwtModule.registerAsync({
           useFactory: () => ({
               secret: process.env.JWT_SECRET,
               signOptions: {
-                  expiresIn: '31d',
+                  expiresIn: '365d',
               },
           }),
       }),
@@ -29,14 +30,8 @@ import { UserController } from './controlers/user.controller';
       RolesGuard,
       UserService,
   ],
-  controllers: [
-      AuthController,
-      UserController
-  ],
-  exports: [
-      AuthService,
-      UserService,
-  ],
+  controllers: [AuthController, UserController],
+  exports: [AuthService, UserService],
 })
 
 export class AuthModule {}

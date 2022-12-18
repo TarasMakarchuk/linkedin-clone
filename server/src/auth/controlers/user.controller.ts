@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Request, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import {Controller, Get, Param, Post, Request, Res, UploadedFile, UseGuards, UseInterceptors} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserService } from '../services/user.service';
 import { JwtGuard } from '../guards/jwt.guard';
@@ -11,6 +11,7 @@ import {
     validFileExtensions
 } from '../helpers/image-storage';
 import { join } from 'path';
+import { UserEntity } from '../entity/user.entity';
 
 @Controller('user')
 export class UserController {
@@ -66,6 +67,12 @@ export class UserController {
                 return of({ imageName });
             })
         );
+    };
+
+    @UseGuards(JwtGuard)
+    @Get(':userId')
+    findUserById(@Param('userId') userId: number): Observable<UserEntity> {
+        return this.userService.findUserById(userId);
     };
 
 }

@@ -11,7 +11,7 @@ export class UserService {
         private userRepository: Repository<UserEntity>,
     ) {}
 
-    findById(id: number): Observable<UserEntity> {
+    findUserById(id: number): Observable<UserEntity> {
         return from(this.userRepository.findOne({
                 where: { id },
                 relations: ['posts'],
