@@ -5,9 +5,8 @@ import {
     ManyToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
+import { FriendRequest_Status } from './friend-request.interface';
 import { UserEntity } from './user.entity';
-
-type FriendRequestStatus = 'pending' | 'accepted' | 'declined';
 
 @Entity('friend-request')
 export class FriendRequestEntity {
@@ -15,7 +14,7 @@ export class FriendRequestEntity {
     id: number;
 
     @Column()
-    status: FriendRequestStatus;
+    status: FriendRequest_Status;
 
     @CreateDateColumn({ name: 'created_at' })
     createdAt: Date;
