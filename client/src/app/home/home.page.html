@@ -3,9 +3,9 @@
 <div class="content-container">
   <app-profile-summary class="ion-hide-xl-down"></app-profile-summary>
   <div>
-    <app-start-post></app-start-post>
+    <app-start-post (create)="onCreatePost($event)"></app-start-post>
     <div class="item-divider post-divider"></div>
-    <app-posts-list></app-posts-list>
+    <app-posts-list [postBody]="body"></app-posts-list>
   </div>
   <app-advertising class="ion-hide-xl-down"></app-advertising>
 </div>

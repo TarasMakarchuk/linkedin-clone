@@ -14,13 +14,19 @@ import jwt_decode from 'jwt-decode';
   providedIn: 'root'
 })
 export class AuthService {
+  constructor(private http: HttpClient, private router: Router) { }
+
   private user$ = new BehaviorSubject<User>(null);
 
   private httpOptions: { headers: HttpHeaders } = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
   };
 
-  get isUserLoggedIn(): Observable<boolean>{
+  get userStream(): Observable<User> {
+    return this.user$.asObservable();
+  };
+
+  get isUserLoggedIn(): Observable<boolean> {
     return this.user$.asObservable().pipe(
       switchMap((user: User) => {
         const isUserAuthenticated = user !== null;
@@ -29,7 +35,7 @@ export class AuthService {
     );
   };
 
-  get getUserRole(): Observable<Role>{
+  get userRole(): Observable<Role> {
     return this.user$.asObservable().pipe(
       switchMap((user: User) => {
         return of(user.role);
@@ -37,7 +43,81 @@ export class AuthService {
     );
   };
 
-  constructor(private http: HttpClient, private router: Router) { }
+  get userId(): Observable<number> {
+    return this.user$.asObservable().pipe(
+      switchMap((user: User) => {
+        return of(user.id);
+      })
+    );
+  };
+
+  get userFullName(): Observable<string> {
+    return this.user$.asObservable().pipe(
+      switchMap((user: User) => {
+        const fullName = `${user.firstName} ${user.lastName}`;
+        return of(fullName);
+      })
+    );
+  };
+
+  get userImagePath(): Observable<string> {
+    return this.user$.asObservable().pipe(
+      switchMap((user: User) => {
+        const doesUserHaveImage = !!user?.imagePath;
+        let fullImagePath = this.getDefaultImagePath();
+        if (doesUserHaveImage) {
+          fullImagePath = this.getImagePath(user.imagePath);
+        }
+        return of(fullImagePath);
+      })
+    );
+  };
+
+  getDefaultImagePath(): string {
+    return `${environment.baseApiUrl}/posts/image/default-avatar.png`;
+  };
+
+  getImagePath(imageName: string): string {
+    return `${environment.baseApiUrl}/posts/image/${imageName}`;
+  };
+
+  getUserImage() {
+    return this.http
+      .get(`${environment.baseApiUrl}/user/image`)
+      .pipe(take(1));
+  };
+
+  updateUserImagePath(imagePath: string): Observable<User> {
+    return this.user$.pipe(
+      take(1),
+      map((user: User) => {
+        user.imagePath = imagePath;
+        this.user$.next(user);
+        return user;
+      })
+    );
+  };
+
+  getUserImageName(): Observable<{ imageName: string }> {
+    return this.http
+      .get<{ imageName: string }>(`${environment.baseApiUrl}/user/image-name`)
+      .pipe(take(1));
+  };
+
+  uploadUserImage(formData: FormData): Observable<{ modifiedFileName: string }> {
+    return this.http
+      .post<{ modifiedFileName: string }>(
+      `${environment.baseApiUrl}/user/upload`,
+      formData,
+    )
+      .pipe(
+        tap(({ modifiedFileName }) => {
+          let user = this.user$.value;
+          user.imagePath = modifiedFileName;
+          this.user$.next(user);
+        })
+      );
+  };
 
   register(user: NewUser): Observable<User> {
     return this.http.post<User>(
@@ -49,7 +129,6 @@ export class AuthService {
   };
 
   login(email: string, password: string): Observable<{ token: string }> {
-    console.log(email, password);
     return this.http.post<{ token: string }>(
       `${environment.baseApiUrl}/auth/login`,
       { email, password },

@@ -2,10 +2,10 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { from, map, Observable, switchMap } from 'rxjs';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from './entity/user.entity';
+import { UserEntity } from '../entity/user.entity';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from './dto/create-user.dto';
-import { LoginUserDto } from './dto/login-user.dto';
+import { CreateUserDto } from '../dto/create-user.dto';
+import { LoginUserDto } from '../dto/login-user.dto';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
@@ -70,19 +70,6 @@ export class AuthService {
                    return from(this.jwtService.signAsync({ user }));
                }
            })
-        );
-    }
-
-    findById(id: number): Observable<UserEntity> {
-        return from(this.userRepository.findOne({
-                where: { id },
-                relations: ['posts'],
-            }
-        )).pipe(
-            map((user: UserEntity) => {
-                delete user.password;
-                return user;
-            }),
         );
     };
 

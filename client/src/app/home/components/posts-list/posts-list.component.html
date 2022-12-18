@@ -6,11 +6,11 @@
           <ion-row class="ion-align-items-center ion-justify-content-center">
             <ion-col size="auto" class="ion-padding">
               <ion-avatar>
-                <ion-img src="../../../../assets/my-profile-img.jpg"></ion-img>
+                <ion-img [src]="$any(post).imagePath"></ion-img>
               </ion-avatar>
             </ion-col>
             <ion-col>
-              <div class="full-name">John Doe</div>
+              <div class="full-name">{{ post.author.firstName }} {{ post.author.lastName }}</div>
               <div class="role">Full stack developer</div>
               <div class="meta-data">
                 1d
@@ -19,6 +19,23 @@
                 <ion-icon name="ellipse"></ion-icon>
                 <ion-icon color="dark" name="globe-outline"></ion-icon>
               </div>
+            </ion-col>
+            <ion-col *ngIf="(userId$ | async) === post.author.id"
+                     style="margin-top: -32px"
+                     class="ion-text-right"
+            >
+              <ion-icon
+                (click)="presentUpdateModal(post.id, post.content)"
+                color="dark"
+                style="font-size: 18px; cursor: pointer;"
+                name="create-outline"
+              ></ion-icon>
+              <ion-icon
+                (click)="deletePost(post.id)"
+                color="danger"
+                style="font-size: 18px; cursor: pointer; margin-left: 15px;"
+                name="trash-outline"
+              ></ion-icon>
             </ion-col>
           </ion-row>
           <p class="post-body">

@@ -1,6 +1,6 @@
 <div>
   <div class="heading ion-padding">
-    <ion-text>Create a post</ion-text>
+    <ion-text>{{ postId ? 'Edit' : 'Create' }} a post</ion-text>
     <ion-button
       (click)="onDismiss()"
       size="small"
@@ -16,12 +16,12 @@
     <ion-row class="ion-justify-content-start">
       <ion-col size="auto">
         <ion-avatar>
-          <ion-img src="../../../../../assets/my-profile-img.jpg"></ion-img>
+          <ion-img *ngIf="userImagePath" [src]="userImagePath"></ion-img>
         </ion-avatar>
       </ion-col>
       <ion-col>
         <div>
-          <ion-text>John Doe</ion-text>
+          <ion-text>{{ fullName }}</ion-text>
         </div>
         <ion-button size="small" shape="round" fill="outline" color="medium">
           <ion-icon color="dark" name="globe-outline"></ion-icon>
@@ -39,8 +39,8 @@
       ngModel
       name="body"
       required=""
-     >
-    </ion-textarea>
+      [(ngModel)]="content"
+    ></ion-textarea>
     <ion-button fill="clear">Add hashtag</ion-button>
     <div class="action-items">
       <div>
@@ -80,7 +80,9 @@
           <ion-text class="view-status">Anyone</ion-text>
         </ion-button>
         <ion-button [disabled]="!form.valid" type="submit" class="ion-margin"
-          >Post</ion-button>
+          >
+          {{ postId ? 'Edit' : 'Post' }}
+        </ion-button>
       </div>
     </div>
   </form>
