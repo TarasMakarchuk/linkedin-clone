@@ -5,7 +5,7 @@ import { Repository, UpdateResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FriendRequestEntity } from '../entity/friend-request.entity';
 import { FriendRequestStatusEnum } from '../entity/friend-request.enum';
-import { FriendRequest, FriendRequestStatus } from '../entity/friend-request.interface';
+import { FriendRequest, FriendRequestStatus, FriendRequest_Status } from '../entity/friend-request.interface';
 
 @Injectable()
 export class UserService {
@@ -21,12 +21,7 @@ export class UserService {
                 where: { id },
                 relations: ['posts'],
             }
-        )).pipe(
-            map((user: UserEntity) => {
-                delete user.password;
-                return user;
-            }),
-        );
+        ));
     };
 
     updateAvatarById(id: number, imagePath: string): Observable<UpdateResult> {
@@ -106,6 +101,29 @@ export class UserService {
                 return of({ status: friendRequest.status });
             }),
         );
+    };
+
+    getFriendRequestUserById(requestId: number): Observable<FriendRequest> {
+        return from(this.friendRequestRepository.findOne({
+            where: { id: requestId },
+        }));
+    };
+
+    respondToFriendRequest(statusResponse: FriendRequest_Status, requestId: number): Observable<FriendRequestStatus> {
+        return this.getFriendRequestUserById(requestId).pipe(
+            switchMap((friendRequest: FriendRequest) => {
+                return from(this.friendRequestRepository.save({
+                    ...friendRequest,
+                    status: statusResponse,
+                }));
+            })
+        );
+    };
+
+    getAllFriendRequestFromRecipients(currentUser: UserEntity): Observable<FriendRequest[]> {
+        return from(this.friendRequestRepository.find({
+            where: { receiver: currentUser },
+        }));
     };
 
 }
