@@ -4,8 +4,8 @@ import { UserEntity } from '../entity/user.entity';
 import { Repository, UpdateResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FriendRequestEntity } from '../entity/friend-request.entity';
-import { FriendRequestStatusEnum } from "../entity/friend-request.enum";
-import { FriendRequest } from '../entity/friend-request.interface';
+import { FriendRequestStatusEnum } from '../entity/friend-request.enum';
+import { FriendRequest, FriendRequestStatus, FriendRequest_Status } from '../entity/friend-request.interface';
 
 @Injectable()
 export class UserService {
@@ -21,12 +21,7 @@ export class UserService {
                 where: { id },
                 relations: ['posts'],
             }
-        )).pipe(
-            map((user: UserEntity) => {
-                delete user.password;
-                return user;
-            }),
-        );
+        ));
     };
 
     updateAvatarById(id: number, imagePath: string): Observable<UpdateResult> {
@@ -91,4 +86,44 @@ export class UserService {
             })
         );
     };
+
+    getFriendRequestStatus(requestId: number, currentUser: UserEntity): Observable<FriendRequestStatus> {
+        return this.findUserById(requestId).pipe(
+            switchMap((receiver: UserEntity) => {
+                return from(this.friendRequestRepository.findOne({
+                    where: [
+                        { creator: currentUser },
+                        { receiver },
+                    ]
+                }));
+            }),
+            switchMap((friendRequest: FriendRequest) => {
+                return of({ status: friendRequest.status });
+            }),
+        );
+    };
+
+    getFriendRequestUserById(requestId: number): Observable<FriendRequest> {
+        return from(this.friendRequestRepository.findOne({
+            where: { id: requestId },
+        }));
+    };
+
+    respondToFriendRequest(statusResponse: FriendRequest_Status, requestId: number): Observable<FriendRequestStatus> {
+        return this.getFriendRequestUserById(requestId).pipe(
+            switchMap((friendRequest: FriendRequest) => {
+                return from(this.friendRequestRepository.save({
+                    ...friendRequest,
+                    status: statusResponse,
+                }));
+            })
+        );
+    };
+
+    getAllFriendRequestFromRecipients(currentUser: UserEntity): Observable<FriendRequest[]> {
+        return from(this.friendRequestRepository.find({
+            where: { receiver: currentUser },
+        }));
+    };
+
 }
