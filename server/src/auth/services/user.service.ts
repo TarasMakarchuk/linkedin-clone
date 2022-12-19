@@ -4,8 +4,8 @@ import { UserEntity } from '../entity/user.entity';
 import { Repository, UpdateResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FriendRequestEntity } from '../entity/friend-request.entity';
-import { FriendRequestStatusEnum } from "../entity/friend-request.enum";
-import { FriendRequest } from '../entity/friend-request.interface';
+import { FriendRequestStatusEnum } from '../entity/friend-request.enum';
+import { FriendRequest, FriendRequestStatus } from '../entity/friend-request.interface';
 
 @Injectable()
 export class UserService {
@@ -91,4 +91,21 @@ export class UserService {
             })
         );
     };
+
+    getFriendRequestStatus(requestId: number, currentUser: UserEntity): Observable<FriendRequestStatus> {
+        return this.findUserById(requestId).pipe(
+            switchMap((receiver: UserEntity) => {
+                return from(this.friendRequestRepository.findOne({
+                    where: [
+                        { creator: currentUser },
+                        { receiver },
+                    ]
+                }));
+            }),
+            switchMap((friendRequest: FriendRequest) => {
+                return of({ status: friendRequest.status });
+            }),
+        );
+    };
+
 }
