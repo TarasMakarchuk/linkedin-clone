@@ -13,6 +13,7 @@ import { ModalComponent } from './components/start-post/modal/modal.component';
 import { PostsListComponent } from './components/posts-list/posts-list.component';
 import { TabsComponent } from './components/tabs/tabs.component';
 import { PopoverComponent } from './components/header/popover/popover.component';
+import { ConnectionProfileComponent } from './components/connection-profile/connection-profile.component';
 
 @NgModule({
   imports: [
@@ -31,6 +32,7 @@ import { PopoverComponent } from './components/header/popover/popover.component'
     PostsListComponent,
     TabsComponent,
     PopoverComponent,
+    ConnectionProfileComponent,
   ]
 })
 export class HomePageModule {}
