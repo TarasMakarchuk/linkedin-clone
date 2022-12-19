@@ -92,13 +92,17 @@ export class UserService {
             switchMap((receiver: UserEntity) => {
                 return from(this.friendRequestRepository.findOne({
                     where: [
-                        { creator: currentUser },
-                        { receiver },
-                    ]
+                        { creator: currentUser, receiver },
+                        { creator: receiver, receiver: currentUser },
+                    ],
+                    relations: ['creator', 'receiver'],
                 }));
             }),
             switchMap((friendRequest: FriendRequest) => {
-                return of({ status: friendRequest.status });
+                if(friendRequest?.receiver.id === currentUser.id) {
+                    return of({ status: FriendRequestStatusEnum.WAITING_TO_CURRENT_USER_RESPONSE as FriendRequest_Status });
+                }
+                return of({ status: friendRequest?.status || FriendRequestStatusEnum.NOT_SENT });
             }),
         );
     };
