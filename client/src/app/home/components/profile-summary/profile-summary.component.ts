@@ -5,15 +5,10 @@ import { switchMap, take } from 'rxjs/operators';
 import { Role } from '../../../auth/models/user.model';
 import { AuthService } from '../../../auth/services/auth.service';
 import { FileTypeResult, fromBuffer } from 'file-type';
+import { BannerColorService } from '../../services/banner-color.service';
 
 type validFileExtension = 'png' | 'jpg' | 'jpeg' | 'gif';
 type validMimeType = 'image/png' | 'image/jpg' | 'image/jpeg' | 'image/gif';
-
-type BannerColors = {
-  colorOne: string;
-  colorTwo: string;
-  colorThree: string;
-};
 
 @Component({
   selector: 'app-profile-summary',
@@ -21,6 +16,8 @@ type BannerColors = {
   styleUrls: ['./profile-summary.component.scss'],
 })
 export class ProfileSummaryComponent implements OnInit, OnDestroy {
+  constructor(private authService: AuthService, public bannerColorService: BannerColorService) {}
+
   form: FormGroup;
 
   validFileExtensions: validFileExtension[] = ['png', 'jpg', 'jpeg', 'gif'];
@@ -32,20 +29,13 @@ export class ProfileSummaryComponent implements OnInit, OnDestroy {
   fullName$ = new BehaviorSubject<string>(null);
   fullName = '';
 
-  bannerColors: BannerColors = {
-    colorOne: '#a0b4b7',
-    colorTwo: '#dbe7e9',
-    colorThree: '#bfd3d6',
-  };
-  constructor(private authService: AuthService) {}
-
   ngOnInit() {
     this.form = new FormGroup({
       file: new FormControl(null),
     });
 
     this.authService.userRole.pipe(take(1)).subscribe((role: Role) => {
-      this.bannerColors = this.getBannerColors(role);
+      this.bannerColorService.bannerColors = this.bannerColorService.getBannerColors(role);
     });
 
     this.authService.userFullName
@@ -59,25 +49,6 @@ export class ProfileSummaryComponent implements OnInit, OnDestroy {
       (imagePath: string) => {
         this.userImagePath = imagePath;
     });
-  };
-
-  private getBannerColors(role: Role): BannerColors {
-    switch (role) {
-      case 'admin':
-        return {
-          colorOne: '#daa520',
-          colorTwo: '#f0e68c',
-          colorThree: '#fafad2',
-        };
-      case 'premium':
-        return {
-          colorOne: '#bc8f8f',
-          colorTwo: '#c09999',
-          colorThree: '#ddadaf',
-        };
-      default:
-        return this.bannerColors;
-    }
   };
 
   onFileSelect(event: Event): void {
