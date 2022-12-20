@@ -3,5 +3,5 @@ export enum FriendRequestStatusEnum {
     PENDING = 'pending',
     ACCEPTED = 'accepted',
     DECLINED = 'declined',
-    WAITING_FOR_CURRENT_USER = 'waiting-for-current-user',
+    WAITING_TO_CURRENT_USER_RESPONSE = 'waiting-to-current-user-response',
 }
