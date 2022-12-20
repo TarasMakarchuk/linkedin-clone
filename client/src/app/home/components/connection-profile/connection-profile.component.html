@@ -1,5 +1,30 @@
 <app-header></app-header>
 
-<p>
-  connection-profile works!
-</p>
+<ion-content>
+  <ion-card>
+    <div [style.background]="this.bannerColorService.bannerColors.colorTwo" class="backdrop">
+      <div [style.background]="this.bannerColorService.bannerColors.colorOne" class="background-one"></div>
+      <div [style.background]="this.bannerColorService.bannerColors.colorOne" class="half-ellipse"></div>
+      <div [style.background]="this.bannerColorService.bannerColors.colorTwo" class="background-two"></div>
+      <div [style.background]="this.bannerColorService.bannerColors.colorThree" class="background-three"></div>
+    </div>
+
+    <ion-card-header class="ion-text-center">
+
+      <ion-avatar
+        class="ion-margin-auto"
+      >
+<!--        <ion-img *ngIf="userImagePath" [src]="userImagePath"></ion-img>-->
+      </ion-avatar>
+
+<!--      <ion-card-title class="ion-margin-top">{{ fullName }}</ion-card-title>-->
+      <ion-card-title class="ion-margin-top">John Doe</ion-card-title>
+      <ion-card-subtitle>Full stack developer</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>
