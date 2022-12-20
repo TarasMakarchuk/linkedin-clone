@@ -82,6 +82,12 @@ export class UserController {
         );
     };
 
+    @Get('image/:fileName')
+    findImageByName(@Param('fileName') fileName: string, @Res() res) {
+        if (!fileName || ['null', '[null]'].includes(fileName)) return;
+        return res.sendFile(fileName, { root: imagesFolderPath });
+    };
+
     @UseGuards(JwtGuard)
     @Get(':userId')
     findUserById(@Param('userId') userStringId: string): Observable<UserEntity> {

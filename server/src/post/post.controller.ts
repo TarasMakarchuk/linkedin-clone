@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, Request, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, Request, UseGuards } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { PostService } from './post.service';
 import { Observable } from 'rxjs';
@@ -10,7 +10,6 @@ import { Roles } from '../auth/decorators/roles/roles.decorator';
 import { Role } from '../auth/entity/role.enum';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { IsCreatorGuard } from './guards/is-creator.guard';
-import { imagesFolderPath } from '../auth/helpers/image-storage';
 
 @Controller('posts')
 export class PostController {
@@ -31,12 +30,6 @@ export class PostController {
     ): Observable<PostEntity[]> {
         take = take > 20 ? 20 : take;
         return this.postService.findPosts(take, skip);
-    };
-
-    @Get('image/:fileName')
-    findImageByName(@Param('fileName') fileName: string, @Res() res) {
-        if (!fileName || ['null', '[null]'].includes(fileName)) return;
-        return res.sendFile(fileName, { root: imagesFolderPath });
     };
 
     @UseGuards(JwtGuard, IsCreatorGuard)

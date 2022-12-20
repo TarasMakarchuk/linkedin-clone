@@ -74,11 +74,11 @@ export class AuthService {
   };
 
   getDefaultImagePath(): string {
-    return `${environment.baseApiUrl}/posts/image/default-avatar.png`;
+    return `${environment.baseApiUrl}/user/image/default-avatar.png`;
   };
 
   getImagePath(imageName: string): string {
-    return `${environment.baseApiUrl}/posts/image/${imageName}`;
+    return `${environment.baseApiUrl}/user/image/${imageName}`;
   };
 
   getUserImage() {
