@@ -2,10 +2,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BannerColorService } from '../../services/banner-color.service';
 import { Observable, Subscription } from 'rxjs';
 import { ActivatedRoute, UrlSegment } from '@angular/router';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { map, switchMap, take, tap } from 'rxjs/operators';
 import { User } from '../../../auth/models/user.model';
 import { ConnectionProfileService } from '../../services/connection-profile.service';
 import { FriendRequestStatus, FriendRequest_Status } from '../../models/FriendRequest';
+import {FriendRequestStatusEnum} from "../../models/friend-request.enum";
 
 @Component({
   selector: 'app-connection-profile',
@@ -44,6 +45,17 @@ export class ConnectionProfileComponent implements OnInit, OnDestroy {
         return this.connectionProfileService.getConnectionUser(userId);
       })
     );
+  };
+
+  addFriend(): Subscription {
+    this.friendRequestStatus = FriendRequestStatusEnum.PENDING;
+    return this.getUserIdFromUrl().pipe(
+      switchMap((userId: number) => {
+        return this.connectionProfileService.addConnectionUser(userId);
+      })
+    )
+      .pipe(take(1))
+      .subscribe();
   };
 
   getFriendRequestStatus(): Observable<FriendRequestStatus> {
