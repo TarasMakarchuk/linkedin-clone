@@ -15,7 +15,7 @@ import { IsCreatorGuard } from './guards/is-creator.guard';
 export class PostController {
     constructor(private postService: PostService) {}
 
-    @Roles(Role.ADMIN, Role.PREMIUM)
+    @Roles(Role.ADMIN, Role.PREMIUM, Role.USER)
     @UseGuards(JwtGuard, RolesGuard)
     @Post()
     create(@Body() dto: CreatePostDto, @Request() req): Observable<CreatePostDto> {
