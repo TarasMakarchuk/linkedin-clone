@@ -6,7 +6,7 @@ import { map, switchMap, take, tap } from 'rxjs/operators';
 import { User } from '../../../auth/models/user.model';
 import { ConnectionProfileService } from '../../services/connection-profile.service';
 import { FriendRequestStatus, FriendRequest_Status } from '../../models/FriendRequest';
-import {FriendRequestStatusEnum} from "../../models/friend-request.enum";
+import { FriendRequestStatusEnum } from '../../models/friend-request.enum';
 
 @Component({
   selector: 'app-connection-profile',
@@ -61,7 +61,7 @@ export class ConnectionProfileComponent implements OnInit, OnDestroy {
   getFriendRequestStatus(): Observable<FriendRequestStatus> {
     return this.getUserIdFromUrl().pipe(
       switchMap((userId: number) => {
-        return this.connectionProfileService.getFriendRequestStatus(userId)
+        return this.connectionProfileService.getFriendRequestStatus(userId);
       })
     );
   };
