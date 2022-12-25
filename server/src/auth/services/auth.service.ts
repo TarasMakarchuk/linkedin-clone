@@ -23,7 +23,9 @@ export class AuthService {
 
    async registration(dto: CreateUserDto): Promise<Observable<UserEntity>> {
         const { firstName, lastName, email, password } = dto;
-        const found = await this.userRepository.findOne({ where: { email }});
+        const found = await this.userRepository.findOne({
+            where: [{ email }],
+        });
         if (found) throw new BadRequestException(`This email is already in use`);
 
         return this.hashPassword(password).pipe(
@@ -47,7 +49,7 @@ export class AuthService {
         return from(
             this.userRepository.findOne({
                 select: ['id', 'firstName', 'lastName', 'email', 'password', 'role'],
-                where: { email },
+                where: [{ email }],
         },
             ),
         ).pipe(switchMap((user: UserEntity) =>
