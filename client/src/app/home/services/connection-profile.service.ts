@@ -20,7 +20,7 @@ export class ConnectionProfileService {
   };
 
   getFriendRequestStatus(id: number): Observable<FriendRequestStatus> {
-      return this.http.get<FriendRequestStatus>(
+    return this.http.get<FriendRequestStatus>(
         `${environment.baseApiUrl}/user/friend-request/status/${id}`
     );
   };

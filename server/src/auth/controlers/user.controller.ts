@@ -106,13 +106,13 @@ export class UserController {
     };
 
     @UseGuards(JwtGuard)
-    @Get('friend-request/status/:requestId')
+    @Get('friend-request/status/:receiverId')
     getFriendRequestStatus(
-        @Param('requestId') requestStringId: string,
+        @Param('receiverId') receiverStringId: string,
         @Request() req,
     ): Observable<FriendRequestStatus> {
-        const requestId = parseInt(requestStringId);
-        return this.userService.getFriendRequestStatus(requestId, req.user);
+        const receiverId = parseInt(receiverStringId);
+        return this.userService.getFriendRequestStatus(receiverId, req.user);
     };
 
     @UseGuards(JwtGuard)
