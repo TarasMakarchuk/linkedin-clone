@@ -138,6 +138,7 @@ export class UserService {
     getAllFriendRequestFromRecipients(currentUser: UserEntity): Observable<FriendRequest[]> {
         return from(this.friendRequestRepository.find({
             where: [{ receiver: currentUser }],
+            relations: ['receiver', 'creator'],
         }));
     };
 
