@@ -1,4 +1,16 @@
-import {Controller, Get, Param, Post, Request, Res, UploadedFile, UseGuards, UseInterceptors} from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Get,
+    Param,
+    Post,
+    Put,
+    Request,
+    Res,
+    UploadedFile,
+    UseGuards,
+    UseInterceptors
+} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserService } from '../services/user.service';
 import { JwtGuard } from '../guards/jwt.guard';
@@ -12,7 +24,7 @@ import {
 } from '../helpers/image-storage';
 import { join } from 'path';
 import { UserEntity } from '../entity/user.entity';
-import { FriendRequest } from '../entity/friend-request.interface';
+import { FriendRequest, FriendRequestStatus } from '../entity/friend-request.interface';
 
 @Controller('user')
 export class UserController {
@@ -70,6 +82,12 @@ export class UserController {
         );
     };
 
+    @Get('image/:fileName')
+    findImageByName(@Param('fileName') fileName: string, @Res() res) {
+        if (!fileName || ['null', '[null]'].includes(fileName)) return;
+        return res.sendFile(fileName, { root: imagesFolderPath });
+    };
+
     @UseGuards(JwtGuard)
     @Get(':userId')
     findUserById(@Param('userId') userStringId: string): Observable<UserEntity> {
@@ -87,4 +105,31 @@ export class UserController {
         return this.userService.sendFriendRequest(receiverId, req.user);
     };
 
+    @UseGuards(JwtGuard)
+    @Get('friend-request/status/:receiverId')
+    getFriendRequestStatus(
+        @Param('receiverId') receiverStringId: string,
+        @Request() req,
+    ): Observable<FriendRequestStatus> {
+        const receiverId = parseInt(receiverStringId);
+        return this.userService.getFriendRequestStatus(receiverId, req.user);
+    };
+
+    @UseGuards(JwtGuard)
+    @Put('friend-request/response/:requestId')
+    respondToFriendRequest(
+        @Param('requestId') requestStringId: string,
+        @Body() statusResponse: FriendRequestStatus,
+    ): Observable<FriendRequestStatus> {
+        const requestId = parseInt(requestStringId);
+        return this.userService.respondToFriendRequest(statusResponse.status, requestId);
+    };
+
+    @UseGuards(JwtGuard)
+    @Get('friend-request/me/received-requests')
+    getAllFriendRequestFromRecipients(
+        @Request() req,
+    ): Observable<FriendRequestStatus[]> {
+        return this.userService.getAllFriendRequestFromRecipients(req.user);
+    };
 }

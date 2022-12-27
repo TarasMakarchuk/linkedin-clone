@@ -28,7 +28,7 @@ export class AuthPage implements OnInit {
     if (this.submissionType === 'join') {
       const { firstName, lastName } = this.form.value;
       if (!firstName || !lastName) return;
-      const user: NewUser = {firstName, lastName, email, password};
+      const user: NewUser = { firstName, lastName, email, password };
 
       return this.authService.register(user).subscribe(() => {
         this.toggleText();

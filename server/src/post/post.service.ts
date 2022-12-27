@@ -41,7 +41,9 @@ export class PostService {
 
     findById(id: number): Observable<PostEntity> {
         return from(this.postRepository.findOne({
-            where: { id },
+            where: [
+                { id },
+            ],
             relations: ['author'],
         }));
     };

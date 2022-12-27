@@ -5,11 +5,17 @@
         <ion-grid>
           <ion-row class="ion-align-items-center ion-justify-content-center">
             <ion-col size="auto" class="ion-padding">
-              <ion-avatar>
+              <ion-avatar
+                style="cursor: pointer;"
+                [routerLink]="['/', 'home', post.author.id]"
+              >
                 <ion-img [src]="$any(post).imagePath"></ion-img>
               </ion-avatar>
             </ion-col>
-            <ion-col>
+            <ion-col
+              style="cursor: pointer;"
+              [routerLink]="['/', 'home', post.author.id]"
+            >
               <div class="full-name">{{ post.author.firstName }} {{ post.author.lastName }}</div>
               <div class="role">Full stack developer</div>
               <div class="meta-data">
