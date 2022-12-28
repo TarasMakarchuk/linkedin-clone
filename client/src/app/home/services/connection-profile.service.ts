@@ -12,6 +12,8 @@ import { FriendRequestStatusEnum } from '../models/friend-request.enum';
 export class ConnectionProfileService {
   constructor(private http: HttpClient) {}
 
+  friendRequests: FriendRequest[];
+
   private httpOptions: { headers: HttpHeaders } = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
   };
