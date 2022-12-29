@@ -46,7 +46,7 @@ export class ConnectionProfileService {
     id: number,
     statusResponse: FriendRequestStatusEnum.ACCEPTED | FriendRequestStatusEnum.DECLINED,
   ): Observable<FriendRequest> {
-    return this.http.post<FriendRequest>(
+    return this.http.put<FriendRequest>(
       `${environment.baseApiUrl}/user/friend-request/response/${id}`,
       { status: statusResponse },
       this.httpOptions,
