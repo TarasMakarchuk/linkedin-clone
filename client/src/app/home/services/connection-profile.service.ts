@@ -42,7 +42,7 @@ export class ConnectionProfileService {
     );
   };
 
-  responseToFriendRequest(
+  respondToFriendRequest(
     id: number,
     statusResponse: FriendRequestStatusEnum.ACCEPTED | FriendRequestStatusEnum.DECLINED,
   ): Observable<FriendRequest> {

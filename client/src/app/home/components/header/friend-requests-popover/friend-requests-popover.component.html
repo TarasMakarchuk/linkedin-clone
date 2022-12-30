@@ -17,8 +17,20 @@
           </ion-col>
         </ion-row>
         <ion-row>
-          <ion-button expand="block" size="small" fill="outline" color="primary">Accept</ion-button>
-          <ion-button expand="block" size="small" fill="outline" color="danger">Decline</ion-button>
+          <ion-button
+            (click)="respondToFriendRequest(friendRequest.id, $any('accepted'))"
+            expand="block"
+            size="small"
+            fill="outline"
+            color="primary"
+          >Accept</ion-button>
+          <ion-button
+            (click)="respondToFriendRequest(friendRequest.id, $any('declined'))"
+            expand="block"
+            size="small"
+            fill="outline"
+            color="danger"
+          >Decline</ion-button>
         </ion-row>
       </ng-container>
     </ion-grid>
