@@ -5,6 +5,7 @@ import { FriendRequest } from '../../../models/FriendRequest';
 import { take, tap } from 'rxjs/operators';
 import { User } from '../../../../auth/models/user.model';
 import { environment } from '../../../../../environments/environment';
+import { FriendRequestStatusEnum } from '../../../models/friend-request.enum';
 
 @Component({
   selector: 'app-friend-requests-popover',
@@ -33,4 +34,25 @@ export class FriendRequestsPopoverComponent implements OnInit {
     });
   };
 
+  async respondToFriendRequest(
+    id: number,
+    statusResponse: FriendRequestStatusEnum.ACCEPTED | FriendRequestStatusEnum.DECLINED,
+  ) {
+    const handleFriendRequest: FriendRequest = this.connectionProfileService.friendRequests.find(
+      (friendRequest: FriendRequest) => friendRequest.id === id
+    );
+    const unhandledFriendRequests: FriendRequest[] = this.connectionProfileService.friendRequests.filter(
+      (friendRequest: FriendRequest) => friendRequest.id !== handleFriendRequest.id
+    );
+    this.connectionProfileService.friendRequests = unhandledFriendRequests;
+
+    if (this.connectionProfileService?.friendRequests.length === 0) {
+      await this.popoverController.dismiss();
+    }
+
+    return this.connectionProfileService
+      .respondToFriendRequest(id, statusResponse)
+      .pipe(take(1))
+      .subscribe();
+  };
 }
