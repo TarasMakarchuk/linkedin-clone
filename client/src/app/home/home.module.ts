@@ -14,6 +14,10 @@ import { PostsListComponent } from './components/posts-list/posts-list.component
 import { TabsComponent } from './components/tabs/tabs.component';
 import { PopoverComponent } from './components/header/popover/popover.component';
 import { ConnectionProfileComponent } from './components/connection-profile/connection-profile.component';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import {
+  FriendRequestsPopoverComponent
+} from './components/header/friend-requests-popover/friend-requests-popover.component';
 
 @NgModule({
   imports: [
@@ -33,6 +37,8 @@ import { ConnectionProfileComponent } from './components/connection-profile/conn
     TabsComponent,
     PopoverComponent,
     ConnectionProfileComponent,
+    UserProfileComponent,
+    FriendRequestsPopoverComponent,
   ]
 })
 export class HomePageModule {}

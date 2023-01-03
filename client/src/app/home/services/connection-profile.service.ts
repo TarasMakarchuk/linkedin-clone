@@ -4,12 +4,15 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { User } from '../../auth/models/user.model';
 import { FriendRequest, FriendRequestStatus } from '../models/FriendRequest';
+import { FriendRequestStatusEnum } from '../models/friend-request.enum';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConnectionProfileService {
   constructor(private http: HttpClient) {}
+
+  friendRequests: FriendRequest[];
 
   private httpOptions: { headers: HttpHeaders } = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -29,6 +32,23 @@ export class ConnectionProfileService {
     return this.http.post<FriendRequest | { error: string }>(
       `${environment.baseApiUrl}/user/friend-request/send/${id}`,
       {},
+      this.httpOptions,
+    );
+  };
+
+  getFriendRequests(): Observable<FriendRequest[]> {
+    return this.http.get<FriendRequest[]>(
+      `${environment.baseApiUrl}/user/friend-request/me/received-requests`
+    );
+  };
+
+  respondToFriendRequest(
+    id: number,
+    statusResponse: FriendRequestStatusEnum.ACCEPTED | FriendRequestStatusEnum.DECLINED,
+  ): Observable<FriendRequest> {
+    return this.http.put<FriendRequest>(
+      `${environment.baseApiUrl}/user/friend-request/response/${id}`,
+      { status: statusResponse },
       this.httpOptions,
     );
   };
