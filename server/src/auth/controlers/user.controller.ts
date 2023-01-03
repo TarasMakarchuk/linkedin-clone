@@ -23,8 +23,8 @@ import {
     validFileExtensions
 } from '../helpers/image-storage';
 import { join } from 'path';
-import { UserEntity } from '../entity/user.entity';
 import { FriendRequest, FriendRequestStatus } from '../entity/friend-request.interface';
+import { User } from '../entity/user.class';
 
 @Controller('user')
 export class UserController {
@@ -90,7 +90,7 @@ export class UserController {
 
     @UseGuards(JwtGuard)
     @Get(':userId')
-    findUserById(@Param('userId') userStringId: string): Observable<UserEntity> {
+    findUserById(@Param('userId') userStringId: string): Observable<User> {
         const userId = parseInt(userStringId);
         return this.userService.findUserById(userId);
     };
