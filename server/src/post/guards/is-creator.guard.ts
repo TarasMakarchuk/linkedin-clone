@@ -2,9 +2,9 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { map, Observable, switchMap } from 'rxjs';
 import { PostService } from '../post.service';
 import { Role } from '../../auth/entity/role.enum';
-import { PostEntity } from '../entity/post.entity';
 import { UserService } from '../../auth/services/user.service';
 import { User } from '../../auth/entity/user.class';
+import { FeedPost } from '../entity/post.class';
 
 @Injectable()
 export class IsCreatorGuard implements CanActivate {
@@ -27,7 +27,7 @@ export class IsCreatorGuard implements CanActivate {
 
     return this.userService.findUserById(userId).pipe(
         switchMap((user: User) => this.postService.findById(postId).pipe(
-            map((post: PostEntity) => {
+            map((post: FeedPost) => {
               return user.id === post.author.id;
             })
         ))

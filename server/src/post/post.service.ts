@@ -2,10 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { PostEntity } from './entity/post.entity';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreatePostDto } from './dto/create-post.dto';
 import { from, Observable } from 'rxjs';
-import { UpdatePostDto } from './dto/update-post.dto';
 import { User } from '../auth/entity/user.class';
+import { FeedPost } from './entity/post.class';
 
 @Injectable()
 export class PostService {
@@ -14,12 +13,12 @@ export class PostService {
         private readonly postRepository: Repository<PostEntity>
     ) {}
 
-    create(user: User, dto: CreatePostDto): Observable<CreatePostDto> {
-        dto.author = user;
-        return from(this.postRepository.save(dto));
+    create(user: User, feedPost: FeedPost): Observable<FeedPost> {
+        feedPost.author = user;
+        return from(this.postRepository.save(feedPost));
     };
 
-    findPosts(take: number, skip: number): Observable<PostEntity[]> {
+    findPosts(take: number, skip: number): Observable<FeedPost[]> {
         return from(
             this.postRepository
                 .createQueryBuilder('post')
@@ -31,15 +30,15 @@ export class PostService {
         )
     };
 
-    update(id: number, dto: UpdatePostDto): Observable<UpdateResult> {
-        return from(this.postRepository.update(id, dto));
+    update(id: number, feedPost: FeedPost): Observable<UpdateResult> {
+        return from(this.postRepository.update(id, feedPost));
     };
 
     delete(id: number): Observable<DeleteResult> {
         return from(this.postRepository.delete(id));
     };
 
-    findById(id: number): Observable<PostEntity> {
+    findById(id: number): Observable<FeedPost> {
         return from(this.postRepository.findOne({
             where: [
                 { id },
