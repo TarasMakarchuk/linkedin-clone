@@ -4,9 +4,8 @@ import { from, map, Observable, switchMap } from 'rxjs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../entity/user.entity';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from '../dto/create-user.dto';
-import { LoginUserDto } from '../dto/login-user.dto';
 import { JwtService } from '@nestjs/jwt';
+import { User } from '../entity/user.class';
 
 @Injectable()
 export class AuthService {
@@ -21,8 +20,8 @@ export class AuthService {
         return from(bcrypt.hash(password, SALT));
     };
 
-   async registration(dto: CreateUserDto): Promise<Observable<UserEntity>> {
-        const { firstName, lastName, email, password } = dto;
+   async registration(user: User): Promise<Observable<User>> {
+        const { firstName, lastName, email, password } = user;
         const found = await this.userRepository.findOne({
             where: [{ email }],
         });
@@ -36,7 +35,7 @@ export class AuthService {
                     email,
                     password: hashedPassword,
                 })).pipe(
-                    map((user: UserEntity) => {
+                    map((user: User) => {
                         delete user.password;
                         return user;
                     })
@@ -45,14 +44,14 @@ export class AuthService {
         );
     };
 
-    validateUser(email: string, password: string): Observable<UserEntity> {
+    validateUser(email: string, password: string): Observable<User> {
         return from(
             this.userRepository.findOne({
                 select: ['id', 'firstName', 'lastName', 'email', 'password', 'role'],
                 where: [{ email }],
         },
             ),
-        ).pipe(switchMap((user: UserEntity) =>
+        ).pipe(switchMap((user: User) =>
             from(bcrypt.compare(password, user.password)).pipe(
                 map((isValidPassword: boolean) => {
                     if (isValidPassword) {
@@ -64,10 +63,10 @@ export class AuthService {
         ));
     };
 
-    login(dto: LoginUserDto): Observable<string> {
-        const { email, password } = dto;
+    login(user: User): Observable<string> {
+        const { email, password } = user;
         return this.validateUser(email, password).pipe(
-           switchMap((user: UserEntity) => {
+           switchMap((user: User) => {
                if (user) {
                    return from(this.jwtService.signAsync({ user }));
                }
