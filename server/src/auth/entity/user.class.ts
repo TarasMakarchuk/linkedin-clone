@@ -1,5 +1,5 @@
 import { Role } from './role.enum';
-import { PostEntity } from '../../post/entity/post.entity';
+import { FeedPost } from '../../post/entity/post.class';
 
 export class User {
     id?: number;
@@ -9,5 +9,5 @@ export class User {
     password?: string;
     imagePath?: string;
     role?: Role;
-    posts?: PostEntity[];
+    posts?: FeedPost[];
 }
