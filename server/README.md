@@ -45,6 +45,16 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+## Running the server 
+
+```bash
+# generate migrations
+$ npm run migration:generate -- db/migrations/migration_name
+
+# run migrations
+$ npm run migration:run
+```
+
 ## Test
 
 ```bash
