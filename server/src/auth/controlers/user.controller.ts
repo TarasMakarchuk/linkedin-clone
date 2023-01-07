@@ -38,7 +38,7 @@ export class UserController {
         @Request() req,
     ):  Observable<{ modifiedFileName: string } | { error: string }> {
         const fileName = file?.filename;
-        if (!fileName) return of({ error: `File extension should be ${[...validFileExtensions].join(', ')}` });
+        if (!fileName) return of({ error: `File extension should be ${[ ...validFileExtensions ].join(', ')}` });
         const imagePath = join(`${imagesFolderPath}/${fileName}`);
 
         return isFileExtensionSafe(imagePath).pipe(
