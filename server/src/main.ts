@@ -1,8 +1,8 @@
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import * as fs from 'fs';
 import * as morgan from 'morgan';
+import { AppModule } from './app.module';
 
 const logStream = fs.createWriteStream('api.log', {
   flags: 'a', //append
@@ -14,6 +14,7 @@ async function bootstrap() {
 
   app.enableCors();
   app.setGlobalPrefix('api');
+  app.useGlobalPipes(new ValidationPipe());
   app.use(morgan('tiny', {
     stream: logStream,
   }));
