@@ -1,6 +1,7 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { CustomHttpExceptionResponse, HttpExceptionResponse } from './models/http-exception-response.interface';
+import * as fs from 'fs';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
@@ -22,7 +23,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
         }
 
         const errorResponse = this.getErrorResponse(status, errorMessage, request);
-        this.logError(errorResponse, request, exception);
+        const errorLog: string = this.getErrorLog(errorResponse, request, exception);
+        this.writeErrorLogTpFile(errorLog);
+        response.status(status).json(errorResponse);
     };
 
     private getErrorResponse = (
@@ -37,11 +40,11 @@ export class AllExceptionsFilter implements ExceptionFilter {
         timeStamp: new Date(),
     });
 
-    private logError = (
+    private getErrorLog = (
         errorResponse: CustomHttpExceptionResponse,
         request: Request,
         exception: unknown
-    ): void => {
+    ): string => {
         const { statusCode, error } = errorResponse;
         const { method, url } = request;
         const showingException = exception instanceof HttpException ? exception.stack : error;
@@ -51,6 +54,13 @@ export class AllExceptionsFilter implements ExceptionFilter {
             User: ${JSON.stringify(request.user ?? 'Not signed in')}\n\n 
             ${showingException}\n\n
         `;
-        console.log(errorLog);
+        return errorLog;
+    };
+
+    private writeErrorLogTpFile = (errorLog: string): void => {
+        fs.appendFile('error.log', errorLog, 'utf8', (error) => {
+                if (error) throw error;
+            }
+        );
     };
 }
