@@ -53,7 +53,6 @@ export class AuthService {
             ),
         ).pipe(switchMap((user: User) => {
             if (!user) {
-                // throw new HttpException('Not found', HttpStatus.NOT_FOUND);
                 throw new HttpException({
                     status: HttpStatus.NOT_FOUND, error: 'Invalid credentials',
                 }, HttpStatus.NOT_FOUND);
