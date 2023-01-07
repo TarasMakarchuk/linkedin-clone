@@ -3,7 +3,6 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as fs from 'fs';
 import * as morgan from 'morgan';
-import { stream } from 'file-type';
 
 const logStream = fs.createWriteStream('api.log', {
   flags: 'a', //append
