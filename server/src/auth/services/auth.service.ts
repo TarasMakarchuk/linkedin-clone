@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { from, map, Observable, switchMap } from 'rxjs';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -51,16 +51,22 @@ export class AuthService {
                 where: [{ email }],
         },
             ),
-        ).pipe(switchMap((user: User) =>
-            from(bcrypt.compare(password, user.password)).pipe(
+        ).pipe(switchMap((user: User) => {
+            if (!user) {
+                // throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+                throw new HttpException({
+                    status: HttpStatus.NOT_FOUND, error: 'Invalid credentials',
+                }, HttpStatus.NOT_FOUND);
+            }
+            return from(bcrypt.compare(password, user.password)).pipe(
                 map((isValidPassword: boolean) => {
                     if (isValidPassword) {
                         delete user.password;
                         return user;
                     }
-                })
+                }),
             )
-        ));
+        }));
     };
 
     login(user: User): Observable<string> {
