@@ -14,11 +14,14 @@ async function bootstrap() {
 
   app.enableCors();
   app.setGlobalPrefix('api');
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({
+    forbidUnknownValues: false,
+  }));
   app.use(morgan('tiny', {
     stream: logStream,
   }));
   await app.listen(PORT);
   Logger.log(`Server start on host http://localhost:${PORT}/api`)
 }
+
 bootstrap();
