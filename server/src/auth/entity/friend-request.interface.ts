@@ -1,5 +1,5 @@
 import { FriendRequestStatusEnum } from './friend-request.enum';
-import { UserEntity } from './user.entity';
+import { User } from './user.class';
 
 export type FriendRequest_Status = FriendRequestStatusEnum;
 
@@ -9,7 +9,7 @@ export interface FriendRequestStatus {
 
 export interface FriendRequest {
     id?: number;
-    creator?: UserEntity;
-    receiver?: UserEntity;
+    creator?: User;
+    receiver?: User;
     status?: FriendRequest_Status;
 }

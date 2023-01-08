@@ -23,8 +23,8 @@ import {
     validFileExtensions
 } from '../helpers/image-storage';
 import { join } from 'path';
-import { UserEntity } from '../entity/user.entity';
 import { FriendRequest, FriendRequestStatus } from '../entity/friend-request.interface';
+import { User } from '../entity/user.class';
 
 @Controller('user')
 export class UserController {
@@ -38,7 +38,7 @@ export class UserController {
         @Request() req,
     ):  Observable<{ modifiedFileName: string } | { error: string }> {
         const fileName = file?.filename;
-        if (!fileName) return of({ error: `File extension should be ${[...validFileExtensions].join(', ')}` });
+        if (!fileName) return of({ error: `File extension should be ${[ ...validFileExtensions ].join(', ')}` });
         const imagePath = join(`${imagesFolderPath}/${fileName}`);
 
         return isFileExtensionSafe(imagePath).pipe(
@@ -90,7 +90,7 @@ export class UserController {
 
     @UseGuards(JwtGuard)
     @Get(':userId')
-    findUserById(@Param('userId') userStringId: string): Observable<UserEntity> {
+    findUserById(@Param('userId') userStringId: string): Observable<User> {
         const userId = parseInt(userStringId);
         return this.userService.findUserById(userId);
     };

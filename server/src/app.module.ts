@@ -5,24 +5,23 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PostModule } from './post/post.module';
 import { AuthModule } from './auth/auth.module';
+import { dataSourceOptions } from '../db/data-source';
+import { APP_FILTER } from '@nestjs/core';
+import { AllExceptionsFilter } from './core/all-exceptions.filter';
 
 @Module({
   imports: [
-      ConfigModule.forRoot({ isGlobal: true }),
-      TypeOrmModule.forRoot({
-        type: 'postgres',
-        host: process.env.POSTGRES_HOST,
-        port: Number(process.env.POSTGRES_PORT),
-        username: process.env.POSTGRES_USER,
-        password: process.env.POSTGRES_PASSWORD,
-        database: process.env.POSTGRES_DATABASE,
-        autoLoadEntities: true,
-        synchronize: true,
+      ConfigModule.forRoot({
+          isGlobal: true,
       }),
+      TypeOrmModule.forRoot(dataSourceOptions),
       PostModule,
       AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, {
+      provide: APP_FILTER,
+      useClass: AllExceptionsFilter,
+  }],
 })
 export class AppModule {}

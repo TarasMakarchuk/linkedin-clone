@@ -1,11 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { from, map, Observable, of, switchMap } from 'rxjs';
-import { UserEntity } from '../entity/user.entity';
 import { Repository, UpdateResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FriendRequestEntity } from '../entity/friend-request.entity';
 import { FriendRequestStatusEnum } from '../entity/friend-request.enum';
 import { FriendRequest, FriendRequestStatus, FriendRequest_Status } from '../entity/friend-request.interface';
+import { User } from '../entity/user.class';
+import { UserEntity } from '../entity/user.entity';
 
 @Injectable()
 export class UserService {
@@ -16,7 +17,7 @@ export class UserService {
         private friendRequestRepository: Repository<FriendRequestEntity>,
     ) {}
 
-    findUserById(userId: number): Observable<UserEntity> {
+    findUserById(userId: number): Observable<User> {
         return from(this.userRepository.findOne({
                 where: [
                     { id: userId },
@@ -24,7 +25,7 @@ export class UserService {
                 relations: ['posts'],
             }
         )).pipe(
-            map((user: UserEntity) => {
+            map((user: User) => {
                 if (!user) {
                     throw new HttpException('User not found', HttpStatus.NOT_FOUND);
                 }
@@ -35,7 +36,7 @@ export class UserService {
     };
 
     updateAvatarById(id: number, imagePath: string): Observable<UpdateResult> {
-        const user: UserEntity = new UserEntity();
+        const user: User = new User();
         user.id = id;
         user.imagePath = imagePath;
 
@@ -48,14 +49,14 @@ export class UserService {
                 { id },
             ],
         })).pipe(
-            map((user: UserEntity) => {
+            map((user: User) => {
                 delete user.password;
                 return user.imagePath;
             })
         );
     };
 
-    hasRequestSentOrReceived(creator: UserEntity, receiver: UserEntity): Observable<boolean> {
+    hasRequestSentOrReceived(creator: User, receiver: User): Observable<boolean> {
         return from(this.friendRequestRepository.findOne({
             where: [
                 { creator },
@@ -71,11 +72,11 @@ export class UserService {
         );
     };
 
-    sendFriendRequest(receiverId: number, creator: UserEntity): Observable<FriendRequest | { error: string }> {
+    sendFriendRequest(receiverId: number, creator: User): Observable<FriendRequest | { error: string }> {
         if (receiverId === creator.id) return of({ error: 'It is not possible add yourself' });
 
         return this.findUserById(receiverId).pipe(
-            switchMap((receiver: UserEntity) => {
+            switchMap((receiver: User) => {
                 return this.hasRequestSentOrReceived(creator, receiver).pipe(
                     switchMap((hasRequestSentOrReceived: boolean) => {
                         if (hasRequestSentOrReceived)
@@ -95,9 +96,9 @@ export class UserService {
         );
     };
 
-    getFriendRequestStatus(receiverId: number, currentUser: UserEntity): Observable<FriendRequestStatus> {
+    getFriendRequestStatus(receiverId: number, currentUser: User): Observable<FriendRequestStatus> {
         return this.findUserById(receiverId).pipe(
-            switchMap((receiver: UserEntity) => {
+            switchMap((receiver: User) => {
                 return from(this.friendRequestRepository.findOne({
                         where: [
                             { creator: currentUser },
@@ -111,7 +112,9 @@ export class UserService {
             }),
             switchMap((friendRequest: FriendRequest) => {
                 if (friendRequest?.receiver.id === currentUser.id) {
-                    return of({ status: FriendRequestStatusEnum.WAITING_TO_CURRENT_USER_RESPONSE as FriendRequest_Status });
+                    return of({
+                        status: FriendRequestStatusEnum.WAITING_TO_CURRENT_USER_RESPONSE as FriendRequest_Status,
+                    });
                 }
                 return of({ status: friendRequest?.status || FriendRequestStatusEnum.NOT_SENT });
             }),
@@ -135,7 +138,7 @@ export class UserService {
         );
     };
 
-    getAllFriendRequestFromRecipients(currentUser: UserEntity): Observable<FriendRequest[]> {
+    getAllFriendRequestFromRecipients(currentUser: User): Observable<FriendRequest[]> {
         return from(this.friendRequestRepository.find({
             where: [{ receiver: currentUser }],
             relations: ['receiver', 'creator'],
