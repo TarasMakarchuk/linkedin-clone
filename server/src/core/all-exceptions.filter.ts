@@ -22,7 +22,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
             errorMessage = 'Critical server error occurred';
         }
 
-        const errorResponse = this.getErrorResponse(status, errorMessage, request);
+        const errorResponse = this.getErrorResponse(status, errorMessage, request, exception);
         const errorLog: string = this.getErrorLog(errorResponse, request, exception);
         this.writeErrorLogTpFile(errorLog);
         response.status(status).json(errorResponse);
@@ -32,13 +32,22 @@ export class AllExceptionsFilter implements ExceptionFilter {
         status: HttpStatus,
         errorMessage: string,
         request: Request,
-    ): CustomHttpExceptionResponse => ({
-        statusCode: status,
-        error: errorMessage,
-        path: request.url,
-        method: request.method,
-        timeStamp: new Date(),
-    });
+        exception: any,
+    ): CustomHttpExceptionResponse => {
+        const errorDetails = exception.getResponse().message instanceof Array
+            ?
+            exception.getResponse().message.map(message => message)
+            :
+            exception.getResponse().message;
+        return {
+            statusCode: status,
+            error: errorMessage,
+            errorDetails,
+            path: request.url,
+            method: request.method,
+            timeStamp: new Date(),
+        };
+    };
 
     private getErrorLog = (
         errorResponse: CustomHttpExceptionResponse,
@@ -48,13 +57,12 @@ export class AllExceptionsFilter implements ExceptionFilter {
         const { statusCode, error } = errorResponse;
         const { method, url } = request;
         const showingException = exception instanceof HttpException ? exception.stack : error;
-        const errorLog = `
-            Response code: ${statusCode} - Method: ${method} - URL: ${url}\n\n 
-            ${JSON.stringify(errorResponse)}\n\n
-            User: ${JSON.stringify(request.user ?? 'Not signed in')}\n\n 
-            ${showingException}\n\n
+        return `
+            Response code: ${statusCode} - Method: ${method} - URL: ${url}\n 
+            ${JSON.stringify(errorResponse)}\n
+            User: ${JSON.stringify(request.user ?? 'Not signed in')}\n
+            ${showingException}\n
         `;
-        return errorLog;
     };
 
     private writeErrorLogTpFile = (errorLog: string): void => {
