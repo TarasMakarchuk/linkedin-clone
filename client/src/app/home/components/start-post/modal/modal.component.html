@@ -32,15 +32,18 @@
     </ion-row>
   </ion-grid>
   <form #form="ngForm" (ngSubmit)="onPost()" class="ion-padding">
-    <ion-textarea
-      rows="5"
-      placeholder="What do you want to talk about?"
-      type="text"
-      ngModel
-      name="body"
-      required=""
-      [(ngModel)]="content"
-    ></ion-textarea>
+    <ion-item>
+      <ion-textarea
+        rows="5"
+        placeholder="What do you want to talk about?"
+        type="text"
+        ngModel
+        name="body"
+        required=""
+        [(ngModel)]="content"
+      ></ion-textarea>
+    </ion-item>
+
     <ion-button fill="clear">Add hashtag</ion-button>
     <div class="action-items">
       <div>
