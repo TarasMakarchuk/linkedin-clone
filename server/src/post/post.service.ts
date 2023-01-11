@@ -13,7 +13,7 @@ export class PostService {
         private readonly postRepository: Repository<PostEntity>
     ) {}
 
-    create(user: User, feedPost: FeedPost): Observable<FeedPost> {
+    createPost(user: User, feedPost: FeedPost): Observable<FeedPost> {
         feedPost.author = user;
         return from(this.postRepository.save(feedPost));
     };

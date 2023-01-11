@@ -6,4 +6,5 @@ export class FeedPost {
     @IsString()
     content?: string;
     author?: User;
+    createdAt: Date;
 }

@@ -17,7 +17,7 @@ export class PostController {
     @UseGuards(JwtGuard, RolesGuard)
     @Post()
     create(@Body() feedPost: FeedPost, @Request() req): Observable<FeedPost> {
-        return this.postService.create(req.user, feedPost);
+        return this.postService.createPost(req.user, feedPost);
     };
 
     @UseGuards(JwtGuard)
