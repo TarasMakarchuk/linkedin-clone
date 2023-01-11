@@ -7,6 +7,7 @@ import { IsCreatorGuard } from './guards/is-creator.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { User } from '../auth/entity/user.class';
 import { FeedPost } from './entity/post.class';
+import { DeleteResult, UpdateResult } from 'typeorm';
 const httpMocks = require('node-mocks-http');
 
 describe('PostController', () => {
@@ -30,6 +31,16 @@ describe('PostController', () => {
     { ...mockPost, content: 'second post' },
   ];
 
+  const mockDeleteResult: DeleteResult = {
+    raw: [],
+    affected: 1,
+  };
+
+  const mockUpdateResult: UpdateResult = {
+    ...mockDeleteResult,
+    generatedMaps: [],
+  };
+
   const mockPostService = {
     createPost: jest.fn().mockImplementation((user: User, feedPost: FeedPost) => {
       return {
@@ -39,9 +50,14 @@ describe('PostController', () => {
     }),
     findPosts: jest.fn().mockImplementation((numberToTake: number, numberToSkip: number) => {
       const postAfterSkipping = mockPosts.slice(numberToSkip);
-      const filteredPosts = postAfterSkipping.slice(0, numberToTake);
-      return filteredPosts;
-    })
+      return postAfterSkipping.slice(0, numberToTake);
+    }),
+    update: jest.fn().mockImplementation(() => {
+      return mockUpdateResult;
+    }),
+    delete: jest.fn().mockImplementation(() => {
+    return mockDeleteResult;
+  }),
   };
 
   const mockUserService = {};
@@ -91,6 +107,14 @@ describe('PostController', () => {
 
   it('Should get 2 posts skipping the first', () => {
     expect(postController.findPosts(2, 1)).toEqual(mockPosts.slice(1));
+  });
+
+  it('Should update a post', () => {
+    expect(postController.update(1, {  ...mockPost, content: 'updated post' })).toEqual(mockUpdateResult);
+  });
+
+  it('Should delete a post', () => {
+    expect(postController.delete(1)).toEqual(mockDeleteResult);
   });
 
 });
