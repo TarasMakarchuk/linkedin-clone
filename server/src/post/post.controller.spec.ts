@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { DeleteResult, UpdateResult } from 'typeorm';
 import { PostService } from './post.service';
 import { PostController } from './post.controller';
 import { UserService } from '../auth/services/user.service';
@@ -7,7 +8,6 @@ import { IsCreatorGuard } from './guards/is-creator.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { User } from '../auth/entity/user.class';
 import { FeedPost } from './entity/post.class';
-import { DeleteResult, UpdateResult } from 'typeorm';
 const httpMocks = require('node-mocks-http');
 
 describe('PostController', () => {
