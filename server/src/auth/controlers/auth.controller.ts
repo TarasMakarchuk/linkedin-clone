@@ -8,7 +8,7 @@ export class AuthController {
     constructor(private authService: AuthService) {}
 
     @Post('registration')
-    registration(@Body() user: User): Promise<Observable<User>> {
+    registration(@Body() user: User): Observable<User> {
         return this.authService.registration(user);
     };
 
