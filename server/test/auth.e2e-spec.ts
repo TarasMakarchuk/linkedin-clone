@@ -3,7 +3,6 @@ import * as request from 'supertest';
 import { HttpStatus } from '@nestjs/common';
 
 describe('AuthController (e2e)', () => {
-
   const authUrl = `http://localhost:5001/api/auth`;
 
   const mockUser: User = {
@@ -33,5 +32,4 @@ describe('AuthController (e2e)', () => {
           .expect(HttpStatus.CREATED);
     });
   });
-
 });
