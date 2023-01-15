@@ -1,5 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
 import * as request  from 'supertest';
+import * as jwt  from 'jsonwebtoken';
 import { User } from '../src/auth/entity/user.class';
 
 describe('AuthController (e2e)', () => {
@@ -50,6 +51,18 @@ describe('AuthController (e2e)', () => {
 
                     expect(token).toBeUndefined();
                 }).expect(HttpStatus.FORBIDDEN);
+        });
+
+        it('It should log and return a JWT for a registered user', () => {
+            return request(authUrl)
+                .post('/login')
+                .set('Accept', 'application/json')
+                .send(mockUser)
+                .expect((response: request.Response) => {
+                    const { token }: { token: string } = response.body;
+
+                    expect(jwt.verify(token, 'secret')).toBeTruthy();
+                }).expect(HttpStatus.OK);
         });
     });
 
