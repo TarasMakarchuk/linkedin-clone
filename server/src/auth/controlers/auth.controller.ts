@@ -9,7 +9,7 @@ export class AuthController {
 
     @Post('registration')
     registration(@Body() user: User): Observable<User> {
-        return this.authService.registration(user);
+        return this.authService.registerUserAccount(user);
     };
 
     @Post('login')

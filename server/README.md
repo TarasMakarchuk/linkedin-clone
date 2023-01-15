@@ -67,6 +67,8 @@ etc.
 
 # e2e tests
 $ npm run test:e2e
+or
+$ npm run test:e2e auth.e2e-spec
 
 # test coverage
 $ npm run test:cov

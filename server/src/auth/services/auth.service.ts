@@ -22,7 +22,7 @@ export class AuthService {
 
     doesUserExist(email: string): Observable<boolean> {
         return from(this.userRepository.findOne({
-            where: [{ email }]
+            where: [{ email }],
         })).pipe(
             switchMap((user: User) => {
                 return of(!!user);
@@ -30,7 +30,7 @@ export class AuthService {
         );
     }
 
-   registration(user: User): Observable<User> {
+   registerUserAccount(user: User): Observable<User> {
         const { firstName, lastName, email, password } = user;
 
         return this.doesUserExist(email).pipe(
@@ -72,8 +72,8 @@ export class AuthService {
         ).pipe(switchMap((user: User) => {
             if (!user) {
                 throw new HttpException({
-                    status: HttpStatus.NOT_FOUND, error: 'Invalid credentials',
-                }, HttpStatus.NOT_FOUND);
+                    status: HttpStatus.FORBIDDEN, error: 'Invalid credentials',
+                }, HttpStatus.FORBIDDEN);
             }
             return from(bcrypt.compare(password, user.password)).pipe(
                 map((isValidPassword: boolean) => {

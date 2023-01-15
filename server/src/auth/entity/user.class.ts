@@ -17,7 +17,7 @@ export class User {
     @MinLength(PASSWORD_MIN_LENGTH, {
         message: `Password should be more than ${PASSWORD_MIN_LENGTH} characters`
     })
-    @MaxLength(PASSWORD_MIN_LENGTH, {
+    @MaxLength(PASSWORD_MAX_LENGTH, {
         message: `Password should be less than ${PASSWORD_MAX_LENGTH} characters`
     })
     password?: string;
