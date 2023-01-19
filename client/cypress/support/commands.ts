@@ -3,18 +3,25 @@
 // with Intellisense and code completion in your
 // IDE or Text Editor.
 // ***********************************************
-// declare namespace Cypress {
-//   interface Chainable<Subject = any> {
-//     customCommand(param: any): typeof customCommand;
-//   }
-// }
-//
-// function customCommand(param: any): void {
-//   console.warn(param);
-// }
+// import type = Mocha.utils.type;
+
+declare namespace Cypress {
+  interface Chainable<Subject = any> {
+    register(firstName: string, lastName: string, email: string, password: string): typeof register;
+  }
+}
+
+function register(firstName: string, lastName: string, email: string, password: string): void {
+  cy.get('ion-input[name="firstName"]').type(firstName);
+  cy.get('ion-input[name="lastName"]').type(lastName);
+  cy.get('ion-input[name="email"]').type(email);
+  cy.get('ion-input[name="password"]').type(password);
+  cy.get('ion-button').should('not.have.attr', 'disabled');
+  cy.get('ion-button').click();
+}
 //
 // NOTE: You can use it like so:
-// Cypress.Commands.add('customCommand', customCommand);
+Cypress.Commands.add('register', register);
 //
 // ***********************************************
 // This example commands.js shows you how to
