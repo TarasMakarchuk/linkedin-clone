@@ -1,4 +1,5 @@
 describe('AuthModule', () => {
+
   it('should redirect to auth page if not signed in', () => {
     cy.visit('/');
     cy.url().should('includes', 'auth');
@@ -41,4 +42,5 @@ describe('AuthModule', () => {
     cy.url().should('not.include', 'home');
     cy.url().should('includes', 'auth');
   });
-})
+
+});
