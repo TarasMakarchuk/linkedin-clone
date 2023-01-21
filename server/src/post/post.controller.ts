@@ -13,11 +13,11 @@ import { FeedPost } from './entity/post.class';
 export class PostController {
     constructor(private postService: PostService) {}
 
-    @Roles(Role.ADMIN, Role.PREMIUM, Role.USER)
+    // @Roles(Role.ADMIN, Role.PREMIUM, Role.USER)
     @UseGuards(JwtGuard, RolesGuard)
     @Post()
     create(@Body() feedPost: FeedPost, @Request() req): Observable<FeedPost> {
-        return this.postService.create(req.user, feedPost);
+        return this.postService.createPost(req.user, feedPost);
     };
 
     @UseGuards(JwtGuard)

@@ -60,9 +60,15 @@ $ npm run migration:run
 ```bash
 # unit tests
 $ npm run test
+or
+$ npm run test post.controller 
+$ npm run test post.controller post.service 
+etc.
 
 # e2e tests
 $ npm run test:e2e
+or
+$ npm run test:e2e auth.e2e-spec
 
 # test coverage
 $ npm run test:cov

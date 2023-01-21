@@ -4,7 +4,7 @@ import { PostController } from './post.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostEntity } from './entity/post.entity';
 import { UserEntity } from '../auth/entity/user.entity';
-import { AuthModule } from 'src/auth/auth.module';
+import { AuthModule } from '../auth/auth.module';
 import { IsCreatorGuard } from './guards/is-creator.guard';
 
 @Module({

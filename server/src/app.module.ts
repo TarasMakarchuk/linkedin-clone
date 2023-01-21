@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { dataSourceOptions } from '../db/data-source';
 import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from './core/all-exceptions.filter';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { AllExceptionsFilter } from './core/all-exceptions.filter';
       TypeOrmModule.forRoot(dataSourceOptions),
       PostModule,
       AuthModule,
+      ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService, {
