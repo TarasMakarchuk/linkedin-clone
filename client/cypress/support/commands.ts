@@ -7,11 +7,29 @@
 
 declare namespace Cypress {
   interface Chainable<Subject = any> {
-    register(firstName: string, lastName: string, email: string, password: string): typeof register;
+    register(
+      firstName: string,
+      lastName: string,
+      email: string,
+      password: string
+    ): typeof register;
   }
+
+  interface Chainable<Subject = any> {
+    login (
+      email: string,
+      password: string
+    ): typeof login;
+  }
+
 }
 
-function register(firstName: string, lastName: string, email: string, password: string): void {
+function register(
+  firstName: string,
+  lastName: string,
+  email: string,
+  password: string
+): void {
   cy.get('ion-input[name="firstName"]').type(firstName);
   cy.get('ion-input[name="lastName"]').type(lastName);
   cy.get('ion-input[name="email"]').type(email);
@@ -19,9 +37,19 @@ function register(firstName: string, lastName: string, email: string, password: 
   cy.get('ion-button').should('not.have.attr', 'disabled');
   cy.get('ion-button').click();
 }
+
+function login(
+  email: string,
+  password: string
+): void {
+  cy.get('ion-input[name="email"]').type(email);
+  cy.get('ion-input[name="password"]').type(password);
+  cy.get('ion-button').should('not.have.attr', 'disabled');
+}
 //
 // NOTE: You can use it like so:
 Cypress.Commands.add('register', register);
+Cypress.Commands.add('login', login);
 //
 // ***********************************************
 // This example commands.js shows you how to
