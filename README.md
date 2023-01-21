@@ -49,7 +49,7 @@ $ yarn start:dev
 $ ionic serve
 ```
 ___
-## Test `🐛`
+## Tests server`🐛`
 
 ```bash
 # unit tests
@@ -63,5 +63,24 @@ $ yarn test:e2e
 # test coverage
 $ npm run test:cov
 $ yarn test:cov
+```
+______
+## Tests client `🐛`
+
+```bash
+# unit tests
+$ ng test
+or
+$ ng test auth.page.spec.ts
+
+# e2e tests
+$ npm run cypress:open
+$ npm run cypress:run
+
+$ yarn test:cypress:open
+$ yarn test:cypress:run
+
+# test coverage
+$ ng test --no-watch --code-coverage
 ```
 ___
