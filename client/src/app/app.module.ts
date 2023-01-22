@@ -6,6 +6,12 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AuthInterceptorService } from './auth/services/auth-interceptor.service';
+import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
+
+const config: SocketIoConfig = {
+  url: 'http://localhost:8988',
+  options: {},
+};
 
 @NgModule({
   declarations: [AppComponent],
@@ -14,6 +20,7 @@ import { AuthInterceptorService } from './auth/services/auth-interceptor.service
     IonicModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
+    SocketIoModule.forRoot(config),
   ],
   providers: [
     {
