@@ -9,7 +9,7 @@ import { AuthInterceptorService } from './auth/services/auth-interceptor.service
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 
 const config: SocketIoConfig = {
-  url: 'http://localhost:8988',
+  url: 'http://localhost:5001',
   options: {},
 };
 
@@ -35,4 +35,5 @@ const config: SocketIoConfig = {
   ],
   bootstrap: [AppComponent],
 })
+
 export class AppModule {}
