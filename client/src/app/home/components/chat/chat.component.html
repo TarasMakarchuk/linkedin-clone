@@ -1,3 +1,22 @@
-<p style="margin: 110px auto;">
-  chat works!
-</p>
+<div style="margin: 110px auto;">
+  <span style="color: black">Chat room</span>
+  <p
+    *ngFor="let message of messages"
+    style="color: gray;"
+  >
+    {{ message }}
+  </p>
+  <form #form="ngForm" (ngSubmit)="onSubmit()">
+    <ion-item>
+      <ion-input ngModel type="text" name="message" required></ion-input>
+    </ion-item>
+    <ion-button
+      [disabled]="!form.valid"
+      type="submit"
+      shape="round"
+      expand="block"
+    >
+      Send message
+    </ion-button>
+  </form>
+</div>
