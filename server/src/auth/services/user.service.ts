@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { from, map, Observable, of, switchMap } from 'rxjs';
-import { Repository, UpdateResult } from 'typeorm';
+import { In, Repository, UpdateResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FriendRequestEntity } from '../entity/friend-request.entity';
 import { FriendRequestStatusEnum } from '../entity/friend-request.enum';
@@ -143,6 +143,34 @@ export class UserService {
             where: [{ receiver: currentUser }],
             relations: ['receiver', 'creator'],
         }));
+    };
+
+    getFriends(currentUser: User): Observable<User[]> {
+        return from(this.friendRequestRepository.find({
+            where: [
+                { creator: currentUser },
+                { status: FriendRequestStatusEnum.ACCEPTED },
+                { receiver: currentUser },
+                { status: FriendRequestStatusEnum.ACCEPTED },
+            ],
+            relations: ['creator', 'receiver'],
+        })).pipe(
+            switchMap((friends: FriendRequest[]) => {
+                let userIds: number[] = [];
+                friends.forEach((friend: FriendRequest) => {
+                    if (friend.creator.id === currentUser.id) {
+                        userIds.push(friend.receiver.id);
+                    }
+                    if (friend.receiver.id === currentUser.id) {
+                        userIds.push(friend.receiver.id);
+                    }
+                });
+
+                return from(this.userRepository.findBy({
+                   id: In(userIds),
+               }));
+            }),
+        );
     };
 
 }
