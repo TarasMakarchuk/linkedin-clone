@@ -1,22 +1,68 @@
-<div style="margin: 110px auto;">
-  <span style="color: black">Chat room</span>
-  <p
-    *ngFor="let message of messages"
-    style="color: gray;"
-  >
-    {{ message }}
-  </p>
-  <form #form="ngForm" (ngSubmit)="onSubmit()">
-    <ion-item>
-      <ion-input ngModel type="text" name="message" required></ion-input>
-    </ion-item>
-    <ion-button
-      [disabled]="!form.valid"
-      type="submit"
-      shape="round"
-      expand="block"
-    >
-      Send message
-    </ion-button>
-  </form>
-</div>
+<ion-card class="container">
+  <div class="select-connection">
+    <div class="top-panel">
+      <div class="heading">
+        <ion-text color="dark">Messaging</ion-text>
+      </div>
+      <div>
+        <ion-button
+          style="margin-right: -30px;"
+          shape="round"
+          color="dark"
+          fill="clear"
+        >
+          <ion-icon name="ellipsis-horizontal-outline"></ion-icon>
+        </ion-button>
+        <ion-button shape="round" color="dark" fill="clear">
+          <ion-icon name="create-outline"></ion-icon>
+        </ion-button>
+      </div>
+    </div>
+    <div class="friend" *ngFor="let friend of friends">
+      <ion-grid>
+        <ion-row class="ion-align-items-center ion-justify-content-center">
+          <ion-col size="auto">
+            <ion-avatar>
+              <ion-img *ngIf="friend.imagePath; else defaultUserAvatar" [src]="'http://localhost:5001/api/user/image/' + friend.imagePath" ></ion-img>
+              <ng-template #defaultUserAvatar>
+                <ion-img *ngIf="friend.imagePath; else defaultUserAvatar" [src]="'http://localhost:5001/api/user/image/default-avatar.png'" ></ion-img>
+
+              </ng-template>
+            </ion-avatar>
+          </ion-col>
+          <ion-col>
+            <ion-card-title>{{ friend.firstName }} {{ friend.lastName }}</ion-card-title>
+            <ion-card-subtitle>Full stack developer</ion-card-subtitle>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+  </div>
+  <div class="chat">
+    <div class="top-panel"></div>
+  </div>
+</ion-card>
+
+
+<!--<div style="margin: 110px auto;">-->
+<!--  <span style="color: black">Chat room</span>-->
+<!--  <p-->
+<!--    *ngFor="let message of messages"-->
+<!--    style="color: gray;"-->
+<!--  >-->
+<!--    {{ message }}-->
+<!--  </p>-->
+<!--  <form #form="ngForm" (ngSubmit)="onSubmit()">-->
+<!--    <ion-item>-->
+<!--      <ion-input ngModel type="text" name="message" required></ion-input>-->
+<!--    </ion-item>-->
+<!--    <ion-button-->
+<!--      [disabled]="!form.valid"-->
+<!--      type="submit"-->
+<!--      shape="round"-->
+<!--      expand="block"-->
+<!--    >-->
+<!--      Send message-->
+<!--    </ion-button>-->
+<!--  </form>-->
+<!--</div>-->
