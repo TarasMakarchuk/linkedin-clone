@@ -1,0 +1,30 @@
+.container {
+  display: flex;
+  height: calc(100% - 110px);
+  width: 800px;
+  box-shadow: none;
+  border: 1px solid #e1e1e1;
+  margin: 100px auto;
+
+  @media (max-width: 800px) {
+    width: 100%;
+  }
+
+  .select-connection {
+    overflow-y: scroll;
+    width: 40%;
+    border-right: 1px solid #e1e1e1;
+  }
+}
+
+.top-panel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e1e1e1;
+  .heading {
+    padding: 16px;
+    font-size: 18px;
+    font-weight: 500;
+  }
+}

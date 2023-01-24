@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { User } from '../../../auth/models/user.model';
 import { ChatService } from '../../services/chat.service';
 
 @Component({
@@ -15,11 +16,16 @@ export class ChatComponent implements OnInit {
 
   newMessage$: Observable<string>;
   messages: string[] = [];
+  friends: User[] = [];
 
   ngOnInit() {
     //TODO: refactor - unsubscribe
-    return this.chatService.getNewMessage().subscribe((message: string) => {
+    this.chatService.getNewMessage().subscribe((message: string) => {
       this.messages.push(message);
+    });
+
+    this.chatService.getFriends().subscribe((friends: User[]) => {
+      this.friends = friends;
     });
   };
 
@@ -29,5 +35,7 @@ export class ChatComponent implements OnInit {
     this.chatService.sendMessage(message);
     this.form.reset();
   };
+
+
 
 }
