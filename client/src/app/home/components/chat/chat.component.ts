@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { AuthService } from '../../../auth/services/auth.service';
@@ -10,13 +10,15 @@ import { ChatService } from '../../services/chat.service';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss'],
 })
-export class ChatComponent implements OnInit, OnDestroy {
-  constructor(private chatService: ChatService, private authService: AuthService) { }
+export class ChatComponent {
+  constructor(
+    private chatService: ChatService,
+    private authService: AuthService,
+  ) {}
 
   @ViewChild('form') form: NgForm;
 
   userImagePath: string;
-  userImagePathSubscription: Subscription;
   newMessage$: Observable<string>;
   messages: string[] = [];
 
@@ -26,18 +28,20 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   selectedConversationIndex: number = 0;
 
-  ngOnInit() {
-    //TODO: refactor - unsubscribe
+  private userImagePathSubscription: Subscription;
+  private messageSubscription: Subscription;
+  private friendsSubscription: Subscription;
 
+  ionViewDidEnter() {
     this.userImagePathSubscription = this.authService.userImagePath.subscribe((imagePath: string) => {
       this.userImagePath = imagePath;
     });
 
-    this.chatService.getNewMessage().subscribe((message: string) => {
+    this.messageSubscription = this.chatService.getNewMessage().subscribe((message: string) => {
       this.messages.push(message);
     });
 
-    this.chatService.getFriends().subscribe((friends: User[]) => {
+    this.friendsSubscription = this.chatService.getFriends().subscribe((friends: User[]) => {
       this.friends = friends;
     });
   };
@@ -55,7 +59,9 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.friend$.next(this.friend);
   };
 
-  ngOnDestroy() {
+  ionViewDidLeave() {
     this.userImagePathSubscription.unsubscribe();
+    this.messageSubscription.unsubscribe();
+    this.friendsSubscription.unsubscribe();
   };
 }
