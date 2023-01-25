@@ -20,7 +20,12 @@
       </div>
     </div>
 
-    <div class="friend" *ngFor="let friend of friends">
+    <div
+      *ngFor="let friend of friends; let idx = index"
+      (click)="openConversation(friend, idx)"
+      class="friend"
+      [ngClass]="{ 'selected-conversation': selectedConversationIndex === idx }"
+    >
       <ion-grid>
         <ion-row class="ion-align-items-center ion-justify-content-center">
           <ion-col size="auto">

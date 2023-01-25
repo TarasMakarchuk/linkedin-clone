@@ -23,6 +23,9 @@
         cursor: pointer;
       }
     }
+    .selected-conversation {
+      border-left: 4px solid green;
+    }
   }
 
   .chat {
