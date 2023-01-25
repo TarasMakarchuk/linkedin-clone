@@ -4,7 +4,8 @@
   width: 800px;
   box-shadow: none;
   border: 1px solid #e1e1e1;
-  margin: 100px auto;
+  margin: auto;
+  margin-top: 110px;
 
   @media (max-width: 800px) {
     width: 100%;
@@ -14,6 +15,33 @@
     overflow-y: scroll;
     width: 40%;
     border-right: 1px solid #e1e1e1;
+    .friend {
+      border-bottom: 1px solid #e1e1e1;
+      border-left: 4px solid transparent;
+      &:hover {
+        background-color: #e1e1e1;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .chat {
+    width: 60%;
+    position: relative;
+    .chat-messages {
+      overflow-y: scroll;
+      height: calc(100% - 260px);
+      border-bottom: 1px solid #e1e1e1;
+    }
+    form {
+      width: 100%;
+      height: 200px;
+      position: absolute;
+      bottom: 0;
+      ion-textarea {
+        height: 110px;
+      }
+    }
   }
 }
 
@@ -26,5 +54,10 @@
     padding: 16px;
     font-size: 18px;
     font-weight: 500;
+  }
+  .friend-name-role {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
   }
 }

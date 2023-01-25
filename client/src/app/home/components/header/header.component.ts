@@ -7,6 +7,7 @@ import { FriendRequestsPopoverComponent } from './friend-requests-popover/friend
 import { FriendRequest } from '../../models/FriendRequest';
 import { ConnectionProfileService } from '../../services/connection-profile.service';
 import { FriendRequestStatusEnum } from '../../models/friend-request.enum';
+import { take, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-header',
@@ -27,10 +28,21 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private friendRequestsSubscription: Subscription;
 
   ngOnInit() {
+    this.authService
+      .getUserImageName()
+      .pipe(
+        take(1),
+        tap(({imageName}) => {
+          const defaultImagePath = 'default-avatar.png';
+          this.authService.updateUserImagePath(imageName || defaultImagePath).subscribe();
+        }),
+      ).subscribe();
+
     this.userImagePathSubscription = this.authService.userImagePath.subscribe(
       (imagePath: string) => {
         this.userImagePath = imagePath;
       });
+
     this.friendRequestsSubscription = this.connectionProfileService.getFriendRequests().subscribe(
       (friendRequests: FriendRequest[]) => {
         this.connectionProfileService.friendRequests = friendRequests.filter((friendRequest: FriendRequest) => {
