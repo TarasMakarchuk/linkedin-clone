@@ -1,6 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { AuthService } from '../../../auth/services/auth.service';
 import { User } from '../../../auth/models/user.model';
 import { ChatService } from '../../services/chat.service';
 
@@ -9,17 +10,24 @@ import { ChatService } from '../../services/chat.service';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss'],
 })
-export class ChatComponent implements OnInit {
-  constructor(private chatService: ChatService) { }
+export class ChatComponent implements OnInit, OnDestroy {
+  constructor(private chatService: ChatService, private authService: AuthService) { }
 
   @ViewChild('form') form: NgForm;
 
+  userImagePath: string;
+  userImagePathSubscription: Subscription;
   newMessage$: Observable<string>;
   messages: string[] = [];
   friends: User[] = [];
 
   ngOnInit() {
     //TODO: refactor - unsubscribe
+
+    this.userImagePathSubscription = this.authService.userImagePath.subscribe((imagePath: string) => {
+      this.userImagePath = imagePath;
+    });
+
     this.chatService.getNewMessage().subscribe((message: string) => {
       this.messages.push(message);
     });
@@ -36,6 +44,7 @@ export class ChatComponent implements OnInit {
     this.form.reset();
   };
 
-
-
+  ngOnDestroy() {
+    this.userImagePathSubscription.unsubscribe();
+  };
 }
