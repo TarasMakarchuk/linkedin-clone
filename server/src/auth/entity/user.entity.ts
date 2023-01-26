@@ -1,7 +1,11 @@
 import { PostEntity } from '../../post/entity/post.entity';
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+    Column, CreateDateColumn, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn,
+} from 'typeorm';
 import { Role } from './role.enum';
 import { FriendRequestEntity } from './friend-request.entity';
+import { ConversationEntity } from '../../chat/entity/conversation.entity';
+import { MessageEntity } from '../../chat/entity/message.entity';
 
 @Entity('user')
 export class UserEntity {
@@ -46,4 +50,16 @@ export class UserEntity {
         (friendRequestEntity) => friendRequestEntity.receiver,
     )
     receivedFriendRequests: FriendRequestEntity[];
+
+    @ManyToMany(
+        () => ConversationEntity,
+        (conversationEntity: ConversationEntity) => conversationEntity.users,
+    )
+    conversations: ConversationEntity[];
+
+    @OneToMany(
+        () => MessageEntity,
+        (messageEntity: MessageEntity) => messageEntity.user,
+    )
+    messages: MessageEntity[];
 }
