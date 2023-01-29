@@ -4,9 +4,10 @@ import { Repository } from 'typeorm';
 import { ConversationEntity } from '../entity/conversation.entity';
 import { ActiveConversationEntity } from '../entity/active-conversation.entity';
 import { MessageEntity } from '../entity/message.entity';
-import { from, map, Observable, of, switchMap } from 'rxjs';
+import { from, map, mergeMap, Observable, of, switchMap, take } from 'rxjs';
 import { Conversation } from '../entity/conversation.interface';
 import { User } from '../../auth/entity/user.class';
+import { ActiveConversation } from '../entity/active-conversation.interface';
 
 @Injectable()
 export class ConversationService {
@@ -65,4 +66,49 @@ export class ConversationService {
             .getMany(),
         );
     };
+
+    getConversationsWithUsers(userId: number): Observable<Conversation[]> {
+        return this.getConversationsForUser(userId).pipe(
+            take(1),
+            switchMap((conversations: Conversation[]) => conversations),
+            mergeMap((conversation: Conversation) => {
+                return this.getUsersInConversation(conversation.id);
+            }),
+        );
+    };
+
+    joinConversation(friendId: number, userId: number, socketId: string): Observable<ActiveConversation> {
+        return this.getConversation(userId, friendId).pipe(
+            switchMap((conversation: Conversation) => {
+                if (!conversation) {
+                    console.warn(`No conversations exists for user id ${userId} and friend id ${friendId}`);
+                    return of(null);
+                }
+                const conversationId = conversation.id;
+                return from(this.activeConversationRepository.findOne({
+                    where: [{ userId }],
+                })).pipe(
+                    switchMap((activeConversation: ActiveConversation) => {
+                        if (activeConversation) {
+                            return from(
+                                this.activeConversationRepository.delete({ userId }),
+                            ).pipe(
+                                switchMap(() => {
+                                    return from(
+                                        this.activeConversationRepository.save({ socketId, userId, conversationId }),
+                                    );
+                                }),
+                            );
+                        } else {
+                            return from(
+                                this.activeConversationRepository.save({ socketId, userId, conversationId }),
+                            );
+                        }
+                    }),
+                );
+            }),
+        );
+    };
+
+
 }
