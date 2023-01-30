@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import {DeleteResult, Repository} from 'typeorm';
 import { ConversationEntity } from '../entity/conversation.entity';
 import { ActiveConversationEntity } from '../entity/active-conversation.entity';
 import { MessageEntity } from '../entity/message.entity';
@@ -8,6 +8,7 @@ import { from, map, mergeMap, Observable, of, switchMap, take } from 'rxjs';
 import { Conversation } from '../entity/conversation.interface';
 import { User } from '../../auth/entity/user.class';
 import { ActiveConversation } from '../entity/active-conversation.interface';
+import {Message} from "../entity/message.interface";
 
 @Injectable()
 export class ConversationService {
@@ -110,5 +111,18 @@ export class ConversationService {
         );
     };
 
+    leaveConversation(socketId: string): Observable<DeleteResult> {
+        return from(this.activeConversationRepository.delete({ socketId }));
+    };
+
+    getActiveUsers(conversationId: number): Observable<User[]> {
+        return from(this.activeConversationRepository.find({
+            where: [{ conversationId }],
+        }));
+    };
+
+    createMessage(message: Message): Observable<Message> {
+        return from(this.messageRepository.save(message));
+    };
 
 }
