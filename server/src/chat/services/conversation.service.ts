@@ -125,4 +125,29 @@ export class ConversationService {
         return from(this.messageRepository.save(message));
     };
 
+    getMessages(conversationId: number): Observable<Message[]> {
+        return from(
+            this.messageRepository
+                .createQueryBuilder('message')
+                .innerJoinAndSelect('message.user', 'user')
+                .where('message.conversation.id =: conversationId', { conversationId })
+                .orderBy('message.createdAt', 'ASC')
+                .getMany(),
+        );
+    };
+
+    removeActiveConversations() {
+        return from(
+            this.activeConversationRepository.createQueryBuilder().delete().execute(),
+        );
+    };
+
+    removeMessages() {
+        return from(this.messageRepository.createQueryBuilder().delete().execute());
+    };
+
+    removeConversations() {
+        return from(this.conversationRepository.createQueryBuilder().delete().execute());
+    };
+
 }
