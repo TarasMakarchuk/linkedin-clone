@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import {DeleteResult, Repository} from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { ConversationEntity } from '../entity/conversation.entity';
 import { ActiveConversationEntity } from '../entity/active-conversation.entity';
 import { MessageEntity } from '../entity/message.entity';
@@ -8,7 +8,7 @@ import { from, map, mergeMap, Observable, of, switchMap, take } from 'rxjs';
 import { Conversation } from '../entity/conversation.interface';
 import { User } from '../../auth/entity/user.class';
 import { ActiveConversation } from '../entity/active-conversation.interface';
-import {Message} from "../entity/message.interface";
+import { Message } from '../entity/message.interface';
 
 @Injectable()
 export class ConversationService {
@@ -50,21 +50,23 @@ export class ConversationService {
     };
 
     getConversationsForUser(userId: number): Observable<Conversation[]> {
-        return from(this.conversationRepository
-            .createQueryBuilder('conversation')
-            .leftJoin('conversation.users', 'user')
-            .where('user.id =: userId', { userId })
-            .orderBy('conversation.lastUpdated', 'DESC')
-            .getMany(),
+        return from(
+            this.conversationRepository
+                .createQueryBuilder('conversation')
+                .leftJoin('conversation.users', 'user')
+                .where('user.id = :userId', { userId })
+                .orderBy('conversation.lastUpdate', 'DESC')
+                .getMany(),
         );
     };
 
     getUsersInConversation(conversationId: number): Observable<Conversation[]> {
-        return from(this.conversationRepository
-            .createQueryBuilder('conversation')
-            .innerJoinAndSelect('conversation.users', 'user')
-            .where('conversation.id =: conversationId', { conversationId })
-            .getMany(),
+        return from(
+            this.conversationRepository
+                .createQueryBuilder('conversation')
+                .innerJoinAndSelect('conversation.users', 'user')
+                .where('conversation.id = :conversationId', { conversationId })
+                .getMany(),
         );
     };
 
@@ -130,11 +132,11 @@ export class ConversationService {
             this.messageRepository
                 .createQueryBuilder('message')
                 .innerJoinAndSelect('message.user', 'user')
-                .where('message.conversation.id =: conversationId', { conversationId })
+                .where('message.conversation.id =:conversationId', { conversationId })
                 .orderBy('message.createdAt', 'ASC')
                 .getMany(),
         );
-    };
+    }
 
     removeActiveConversations() {
         return from(
