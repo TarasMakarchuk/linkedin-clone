@@ -26,8 +26,8 @@ export class ConversationService {
             this.conversationRepository
                 .createQueryBuilder('conversation')
                 .leftJoin('conversation.users', 'user')
-                .where('user.id =: creatorId', { creatorId })
-                .orWhere('user.id =: friendId', { friendId })
+                .where('user.id = :creatorId', { creatorId })
+                .orWhere('user.id = :friendId', { friendId })
                 .groupBy('conversation.id')
                 .having('COUNT(*) > 1')
                 .getOne(),
@@ -132,7 +132,7 @@ export class ConversationService {
             this.messageRepository
                 .createQueryBuilder('message')
                 .innerJoinAndSelect('message.user', 'user')
-                .where('message.conversation.id =:conversationId', { conversationId })
+                .where('message.conversation.id = :conversationId', { conversationId })
                 .orderBy('message.createdAt', 'ASC')
                 .getMany(),
         );

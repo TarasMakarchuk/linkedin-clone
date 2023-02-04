@@ -128,6 +128,20 @@ export class ChatComponent {
     this.messages = [];
   };
 
+  deriveImagePath(user: User): string {
+    let url = `http://localhost:5001/api/user/image`;
+    if (user.id === this.userId) {
+      return this.userImagePath;
+    }
+    if (user.imagePath) {
+      return url + user.imagePath;
+    }
+    if (this.friend.imagePath) {
+      return url + this.friend.imagePath;
+    }
+    return url + 'default-avatar.png';
+  };
+
   ionViewDidLeave() {
     this.chatService.leaveConversation();
 
@@ -139,4 +153,5 @@ export class ChatComponent {
     this.friendsSubscription.unsubscribe();
     this.friendSubscription.unsubscribe();
   };
+
 }
