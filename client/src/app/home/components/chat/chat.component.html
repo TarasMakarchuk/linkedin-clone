@@ -30,10 +30,12 @@
         <ion-row class="ion-align-items-center ion-justify-content-center">
           <ion-col size="auto">
             <ion-avatar>
+
               <ion-img
                 *ngIf="friend.imagePath; else defaultUserAvatar"
                 [src]="'http://localhost:5001/api/user/image/' + friend.imagePath"
               ></ion-img>
+
               <ng-template #defaultUserAvatar>
                 <ion-img
                   *ngIf="friend.imagePath; else defaultUserAvatar"
@@ -55,7 +57,10 @@
   <div class="chat">
     <div class="top-panel">
       <div class="friend-name-role">
-        <ion-text style="font-weight: 500" color="dark">Firstname Lastname</ion-text>
+        <ion-text style="font-weight: 500" color="dark">
+          {{ friend?.firstName || "Loading..." }}
+          {{ friend?.lastName }}
+        </ion-text>
         <ion-text color="dark">Full Stack developer</ion-text>
       </div>
       <div>
@@ -81,13 +86,21 @@
         <ion-col style="height: 70px">
           <ion-avatar style="margin-bottom: 50px">
             <ion-img
-              *ngIf="userImagePath"
-              [src]="userImagePath"
+              [src]="deriveImagePath(message.user)"
             ></ion-img>
           </ion-avatar>
         </ion-col>
         <ion-col>
-          <p style="color: gray; margin-left: -150px;">{{ message }}</p>
+          <p style="color: gray; margin-left: -150px;">
+            <span style="font-weight: 500">
+            {{ message.user.firstName }}
+            {{ message.user.lastName }}
+            </span>
+            - {{ message.created_at | date: "short" }}
+          </p>
+          <p>
+            {{ message.message }}
+          </p>
         </ion-col>
       </ion-row>
     </ion-grid>
