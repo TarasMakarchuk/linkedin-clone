@@ -120,4 +120,5 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
         .pipe(take(1))
         .subscribe();
   };
+
 }
