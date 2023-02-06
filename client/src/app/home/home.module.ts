@@ -18,6 +18,7 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
 import {
   FriendRequestsPopoverComponent
 } from './components/header/friend-requests-popover/friend-requests-popover.component';
+import { ChatComponent } from './components/chat/chat.component';
 
 @NgModule({
   imports: [
@@ -39,6 +40,7 @@ import {
     ConnectionProfileComponent,
     UserProfileComponent,
     FriendRequestsPopoverComponent,
+    ChatComponent,
   ]
 })
 export class HomePageModule {}

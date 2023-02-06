@@ -38,7 +38,7 @@ export class AuthService {
   get userRole(): Observable<Role> {
     return this.user$.asObservable().pipe(
       switchMap((user: User) => {
-        return of(user.role);
+        return of(user?.role); // for after sigh out, but still subscribed
       })
     );
   };
@@ -54,6 +54,9 @@ export class AuthService {
   get userFullName(): Observable<string> {
     return this.user$.asObservable().pipe(
       switchMap((user: User) => {
+        if (!user) {
+          return of(null);
+        }
         const fullName = `${user.firstName} ${user.lastName}`;
         return of(fullName);
       })

@@ -132,4 +132,12 @@ export class UserController {
     ): Observable<FriendRequestStatus[]> {
         return this.userService.getAllFriendRequestFromRecipients(req.user);
     };
+
+    @UseGuards(JwtGuard)
+    @Get('friends/my')
+    getAllFriends(
+        @Request() req,
+    ): Observable<User[]> {
+        return this.userService.getFriends(req.user);
+    };
 }
